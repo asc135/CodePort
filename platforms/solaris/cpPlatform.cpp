@@ -9,14 +9,15 @@
 //
 //  Description:    Common Platform Definitions.
 //
-//  Platform:       linux
+//  Platform:       solaris
 //
 //  History:
 //  2010-10-10  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2021-12-16  asc Added ThreadYield_Impl().
-//  2021-12-16  asc Replaced syscall(SYS_gettid) with pthread_self().
 // ----------------------------------------------------------------------------
+
+#include <sched.h>
 
 #include "cpPlatform.h"
 
@@ -35,7 +36,7 @@ uint32_t ThreadId_Impl()
 // thread yield implementation
 uint32_t ThreadYield_Impl()
 {
-    return static_cast<uint32_t>(pthread_yield());
+    return static_cast<uint32_t>(sched_yield());
 }
 
 }   // namespace cp

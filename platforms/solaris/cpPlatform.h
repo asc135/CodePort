@@ -9,7 +9,7 @@
 //
 //  Description:    Common Platform Header.
 //
-//  Platform:       linux
+//  Platform:       solaris
 //
 //  History:
 //  2010-10-10  asc Creation.

@@ -19,6 +19,7 @@
 //  2013-06-13  asc Added StartProcess() function.
 //  2013-12-18  asc Added DirCreate() and moved PathCreate() into common module.
 //  2014-10-22  asc Applied patch from K. Holmes to fix Time64() overflow on 32-bit systems.
+//  2021-12-16  asc Added ThreadYield_Impl() for portability.
 // ----------------------------------------------------------------------------
 
 #include <arpa/inet.h>
@@ -193,7 +194,7 @@ uint32_t ThreadId()
 // relinquish current thread's execution
 bool ThreadYield()
 {
-    return (pthread_yield() == 0);
+    return (ThreadYield_Impl() == 0);
 }
 
 

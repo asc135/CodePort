@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2012-12-11  asc Added timeout parameter to SendData() and recvData().
 //  2013-12-18  asc Updated to new output parameter type for Tokenize().
+//  2021-12-16  asc Changed FNDELAY to O_NONBLOCK, the latest standard.
 // ----------------------------------------------------------------------------
 
 #include <sys/time.h>
@@ -119,7 +120,7 @@ void Serial::ParamSet()
     uint32_t StopBits;
 
     // set non-blocking mode (redundant with O_NDELAY in the open() call but needed for portability
-    fcntl(m_Device.Desc, F_SETFL, FNDELAY);
+    fcntl(m_Device.Desc, F_SETFL, O_NONBLOCK);
 
     // get the existing port settings
     tcgetattr(m_Device.Desc, &settings);
