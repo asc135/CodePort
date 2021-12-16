@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2012-12-11  asc Added timeout parameter to SendData() and recvData().
 //  2014-12-03  asc Replaced readiness polling with timed send/receive.
+//  2021-12-17  asc Properly casted k_Error for comparison.
 // ----------------------------------------------------------------------------
 
 #include <sys/types.h>
@@ -70,7 +71,7 @@ Queue::Queue(String const &Name, size_t MsgSize, uint32_t MaxMsgs) :
     m_MsgQueue = mq_open(m_SysName.c_str(), O_RDWR | O_CREAT, 0700, &ma);
 
     // -1 indicates an error
-    if (m_MsgQueue == k_Error)
+    if (m_MsgQueue == reinterpret_cast<Queue_t>(k_Error))
     {
         LogErr << "Queue::Queue(): Message queue could not be created: "
                << NameGet() << std::endl;
@@ -102,7 +103,7 @@ Queue::Queue(String const &Name) :
     m_MsgQueue = mq_open(m_SysName.c_str(), O_RDWR);
 
     // -1 indicates an error
-    if (m_MsgQueue == k_Error)
+    if (m_MsgQueue == reinterpret_cast<Queue_t>(k_Error))
     {
         LogErr << "Queue::Queue(): Message queue could not be opened: "
                << NameGet() << std::endl;
