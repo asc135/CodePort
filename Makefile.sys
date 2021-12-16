@@ -9,6 +9,7 @@
 #   2012-11-20  asc Created discrete C and CPP translator aliases.
 #   2012-12-03  asc Added support for DLL builds.
 #   2013-04-10  asc Added support for shared object builds.
+#   2021-12-16  asc Adapted to use unix find rather than gnu find.
 #
 ######################################################################
 
@@ -35,7 +36,7 @@ endif
 #
 # Create List of Virtual Paths (allows output directory different than source directory)
 #
-VPATH := $(OBJ_PATH) $(shell find -L $(SRC_PATH) -type d ! -regex ".*\.svn.*" -printf "%p ")
+VPATH := $(OBJ_PATH) $(shell find -L $(SRC_PATH) -type d -print | tr '\n' ' ')
 
 #
 # Build Tool Binary Aliases
@@ -58,7 +59,7 @@ LFLAGS = $(CONFIG_LFLAGS) $(PLATFORM_LFLAGS) $(PROJECT_LFLAGS)
 #
 # Create List of Source Files
 #
-SRCS := $(shell find -L $(SRC_PATH)   \( -iname "*.cpp" -o -iname "*.c" \) -printf "%f ")
+SRCS := $(shell find -L $(SRC_PATH)   \( -iname "*.cpp" -o -iname "*.c" \) -print | xargs -L 1 basename | tr '\n' ' ')
 
 #
 # Create List of Object Files
@@ -74,7 +75,7 @@ DEPS = $(OBJS:.o=.d)
 #
 # Create List of Include Paths
 #
-INCS := $(shell find -L $(SRC_PATH) -type d ! -regex ".*\.svn.*" -printf "-I%p ") $(PROJECT_INCS)
+INCS := $(shell find -L $(SRC_PATH) -type d -print | sed -e 's/^/-I/g' | tr '\n' ' ') $(PROJECT_INCS)
 
 #
 # Create List of Libraries

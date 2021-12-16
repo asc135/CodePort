@@ -14,6 +14,7 @@
 //  History:
 //  2010-10-10  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
+//  2021-12-16  asc Replaced syscall(SYS_gettid) with pthread_self().
 // ----------------------------------------------------------------------------
 
 #include <sys/syscall.h>
@@ -29,7 +30,7 @@ std::ostream &LogErr = std::cerr;
 // thread ID implementation
 uint32_t ThreadId_Impl()
 {
-    return static_cast<uint32_t>(syscall(SYS_gettid));
+    return static_cast<uint32_t>(pthread_self());
 }
 
 }   // namespace cp
