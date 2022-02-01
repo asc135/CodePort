@@ -20,6 +20,7 @@
 //  2013-12-18  asc Added DirCreate() and moved PathCreate() into common module.
 //  2014-10-22  asc Applied patch from K. Holmes to fix Time64() overflow on 32-bit systems.
 //  2021-12-16  asc Added ThreadYield_Impl() for portability.
+//  2021-12-17  asc Added AF_INET check for portability.
 // ----------------------------------------------------------------------------
 
 #include <arpa/inet.h>
@@ -30,6 +31,10 @@
 #include <ctime>
 
 #include "cpUtil.h"
+
+#ifndef AF_INET
+#include <sys/socket.h>
+#endif
 
 namespace cp
 {

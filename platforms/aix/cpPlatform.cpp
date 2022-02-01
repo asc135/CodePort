@@ -17,6 +17,8 @@
 //  2021-12-16  asc Added ThreadYield_Impl().
 // ----------------------------------------------------------------------------
 
+#include <sched.h>
+
 #include "cpPlatform.h"
 
 namespace cp
@@ -34,7 +36,7 @@ uint32_t ThreadId_Impl()
 // thread yield implementation
 uint32_t ThreadYield_Impl()
 {
-    return static_cast<uint32_t>(pthread_yield());
+    return static_cast<uint32_t>(sched_yield());
 }
 
 }   // namespace cp

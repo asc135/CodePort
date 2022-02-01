@@ -59,7 +59,8 @@ PROJECT_LFLAGS =
 #
 # Configuration Compiler and Linker Flags
 #
-CONFIG_CFLAGS = -std=c++98
+CPPFLAGS = -std=c++98
+CONFIG_CFLAGS =
 CONFIG_LFLAGS =
 
 #

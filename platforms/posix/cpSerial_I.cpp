@@ -17,6 +17,7 @@
 //  2012-12-11  asc Added timeout parameter to SendData() and recvData().
 //  2013-12-18  asc Updated to new output parameter type for Tokenize().
 //  2021-12-16  asc Changed FNDELAY to O_NONBLOCK, the latest standard.
+//  2021-12-17  asc Put conditionals around some symbols for portability.
 // ----------------------------------------------------------------------------
 
 #include <sys/time.h>
@@ -128,14 +129,16 @@ void Serial::ParamSet()
     // set the data rate
     switch (m_Device.DataRate)
     {
+#ifdef B115200
     case 115200:
         DataRate = B115200;
         break;
-
+#endif
+#ifdef B57600
     case 57600:
         DataRate = B57600;
         break;
-
+#endif
     case 38400:
         DataRate = B38400;
         break;
@@ -281,7 +284,9 @@ void Serial::ParamSet()
 
     // clear the handshaking mode
     settings.c_iflag &= ~(IXON | IXOFF | IXANY);
+#ifdef CRTSCTS
     settings.c_cflag &= ~CRTSCTS;
+#endif
 
     // set the handshaking
     switch (m_Device.FlowCtrl)
@@ -291,12 +296,16 @@ void Serial::ParamSet()
 
     case 1:     // xon_xoff
         settings.c_iflag |= (IXON | IXOFF | IXANY);
+#ifdef CRTSCTS
         settings.c_cflag &= ~CRTSCTS;
+#endif
         break;
 
     case 2:     // rts_cts
         settings.c_iflag &= ~(IXON | IXOFF | IXANY);
+#ifdef CRTSCTS
         settings.c_cflag |= CRTSCTS;
+#endif
         break;
 
     default:    // no flow control

@@ -51,7 +51,7 @@ ST = $(BUILD_TOOL)strip
 RM = rm
 
 #
-# Create List of Comiler and Linker Flags
+# Create List of Compiler and Linker Flags
 #
 CFLAGS = $(CONFIG_CFLAGS) $(PLATFORM_CFLAGS) $(PROJECT_CFLAGS)
 LFLAGS = $(CONFIG_LFLAGS) $(PLATFORM_LFLAGS) $(PROJECT_LFLAGS)
@@ -59,7 +59,7 @@ LFLAGS = $(CONFIG_LFLAGS) $(PLATFORM_LFLAGS) $(PROJECT_LFLAGS)
 #
 # Create List of Source Files
 #
-SRCS := $(shell find -L $(SRC_PATH)   \( -iname "*.cpp" -o -iname "*.c" \) -print | xargs -L 1 basename | tr '\n' ' ')
+SRCS := $(shell find -L $(SRC_PATH) \( -name "*.cpp" -o -name "*.c" -o -name "*.CPP" -o -name "*.C" \) -print | xargs -L 1 basename | tr '\n' ' ')
 
 #
 # Create List of Object Files
@@ -94,7 +94,7 @@ LIBS = $(PROJECT_LIBS) $(PLATFORM_LIBS)
 	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
 
 %.o: %.cpp
-	$(CPP) $(CFLAGS) $(INCS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS) -c $< -o $@
 
 $(OBJ_PATH)/%.o: %.c
 	@mkdir -p $(OBJ_PATH)
@@ -102,7 +102,7 @@ $(OBJ_PATH)/%.o: %.c
 
 $(OBJ_PATH)/%.o: %.cpp
 	@mkdir -p $(OBJ_PATH)
-	$(CPP) $(CFLAGS) $(INCS) -c $< -o $@
+	$(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS) -c $< -o $@
 
 #
 # Rule to build all
@@ -144,7 +144,7 @@ $(OBJ_PATH)/%.d: %.cpp
 # Rule for cleaning up the build objects
 #
 clean:
-	@if [ -d $(OBJ_PATH) ]; then $(RM) -rfv $(OBJ_PATH); fi
+	@if [ -d $(OBJ_PATH) ]; then $(RM) -rf $(OBJ_PATH); fi
 
 #
 # Project Build Rules
