@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2012-08-31  asc Added copy constructors to match conversion assignment operators.
 // ----------------------------------------------------------------------------
+
 #ifndef CP_BUFFER_H
 #define CP_BUFFER_H
 

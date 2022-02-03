@@ -19,6 +19,7 @@
 //  2013-03-08  asc Fixed a length criterion in the CopyOut method.
 //  2013-04-22  asc Removed duplicated code from StreamBase conversion assignment.
 //  2013-06-08  asc Added m_PtrBlock validity check before CopyOut() references it.
+//  2022-02-03  asc Removed unnecessary assignment.
 // ----------------------------------------------------------------------------
 
 #include "cpStreamBase.h"
@@ -371,7 +372,7 @@ Buffer &Buffer::operator=(StreamBase &rhs)
     {
         // copy the buffer data
         rhs.Seek(0);
-        size = rhs.Read(*this, size);
+        rhs.Read(*this, size);
     }
 
     return *this;
