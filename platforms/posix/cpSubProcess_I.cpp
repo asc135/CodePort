@@ -13,6 +13,7 @@
 //
 //  History:
 //  2022-02-02  asc Creation.
+//  2022-02-04  asc Added Cancel method.
 // ----------------------------------------------------------------------------
 
 // (.)(.) 2022-02-03 asc Need to implement the k_FlowIn mode.
@@ -86,6 +87,12 @@ SubProcess::~SubProcess()
 }
 
 
+void SubProcess::Cancel()
+{
+    m_IoThread.ExitReq();
+}
+
+
 bool SubProcess::IsRunning()
 {
     return !m_Completed.TryTake();
@@ -95,6 +102,7 @@ bool SubProcess::IsRunning()
 void SubProcess::WaitUntilDone()
 {
     m_Completed.Take();
+    m_Completed.Give();
     return;
 }
 

@@ -13,6 +13,7 @@
 //
 //  History:
 //  2022-02-02  asc Creation.
+//  2022-02-04  asc Added Cancel method.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_SUBPROCESS_H
@@ -43,6 +44,7 @@ namespace cp
         virtual ~SubProcess();
 
         // public methods
+        void Cancel();                                      // cancel execution
         bool IsRunning();                                   // check if subprocess currently running
         void WaitUntilDone();                               // returns when subprocess completes
         void BufferExtract(Buffer &Buf);                    // copy out the stream buffer
