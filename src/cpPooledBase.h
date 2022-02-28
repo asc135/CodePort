@@ -18,6 +18,7 @@
 //  History:
 //  2012-02-29  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
+//  2022-02-28  asc Updated exception handling for C++11 and newer.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_POOLEDBASE_H
@@ -43,11 +44,11 @@ public:
 
     // overridden new and delete operators to create all derived instances from the memory block pool
 
-    static void *operator new(size_t Size) throw(std::bad_alloc);
+    static void *operator new(size_t Size) noexcept(false);
     static void *operator new(size_t Size, const std::nothrow_t &) throw();
     static void *operator new(size_t Size, void *Ptr) throw();
 
-    static void *operator new[](size_t Size) throw(std::bad_alloc);
+    static void *operator new[](size_t Size) noexcept(false);
     static void *operator new[](size_t Size, const std::nothrow_t &) throw();
     static void *operator new[](size_t Size, void *Ptr) throw();
 

@@ -18,6 +18,7 @@
 //  History:
 //  2012-02-29  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
+//  2022-02-28  asc Updated exception handling for C++11 and newer.
 // ----------------------------------------------------------------------------
 
 #include <new>
@@ -29,7 +30,7 @@ namespace cp
 {
 
 // overridden new operator (throws exceptions)
-void *PooledBase::operator new(size_t Size) throw(std::bad_alloc)
+void *PooledBase::operator new(size_t Size) noexcept(false)
 {
     MemBlock *pMem = NULL;
 
@@ -67,7 +68,7 @@ void *PooledBase::operator new(size_t Size, void *Ptr) throw()
 
 
 // overridden array new operator (throws exceptions)
-void *PooledBase::operator new[](size_t Size) throw(std::bad_alloc)
+void *PooledBase::operator new[](size_t Size) noexcept(false)
 {
     MemBlock *pMem = NULL;
 

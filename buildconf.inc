@@ -11,6 +11,7 @@
 #   2013-04-11  asc Restructured to better support platform configuration.
 #   2013-12-19  asc Adapted to symlink-free CodePort configuration.
 #   2021-11-04  asc Added -std=c++98 to config cflags.
+#   2022-02-28  asc Switched to -std=c++20 (-std=c++2a for g++ ver <= 9).
 ###############################################################################
 
 #
@@ -59,7 +60,7 @@ PROJECT_LFLAGS =
 #
 # Configuration Compiler and Linker Flags
 #
-CPPFLAGS = -std=c++98
+CPPFLAGS = -std=c++2a
 CONFIG_CFLAGS =
 CONFIG_LFLAGS =
 

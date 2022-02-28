@@ -16,6 +16,7 @@
 //  2013-04-24  asc Added ReleaseThread() method.
 //  2013-05-16  asc Integrated router thread into main class.
 //  2013-05-28  asc Changed NodeDel() return type to bool.
+//  2022-02-28  asc Added const to std::pair keys for C++11 and newer.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_IPCROUTER_H
@@ -34,8 +35,8 @@ class IpcSegment;
 // ----------------------------------------------------------------------------
 
 // custom type definitions
-typedef std::map<uint32_t, Queue *, std::less<uint32_t const>, Alloc< std::pair<uint32_t, Queue *> > > IpcNodeQueueMap_t;
-typedef std::map<String, uint32_t,  std::less<String const>,   Alloc< std::pair<String, uint32_t > > > IpcNodeAddrMap_t;
+typedef std::map<uint32_t, Queue *, std::less<uint32_t const>, Alloc< std::pair<uint32_t const, Queue *> > > IpcNodeQueueMap_t;
+typedef std::map<String, uint32_t,  std::less<String const>,   Alloc< std::pair<String const, uint32_t > > > IpcNodeAddrMap_t;
 
 // ----------------------------------------------------------------------------
 
