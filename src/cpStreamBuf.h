@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2013-04-22  asc Added conversion assignment operator from Buffer.
 //  2013-08-29  asc Refactored Clear() operation to eliminate inheritance pitfalls.
+//  2022-03-02  asc Added TransferBlocks() method.
 // ----------------------------------------------------------------------------
 #ifndef CP_STREAMBUF_H
 #define CP_STREAMBUF_H
@@ -52,6 +53,7 @@ public:
     StreamBuf &operator=(Buffer const &rhs);                // conversion assignment operator
 
     // accessors
+    void TransferBlocksFrom(StreamBuf &src);                // transfer memory blocks from src
 
     // manipulators
 

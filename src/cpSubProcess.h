@@ -14,6 +14,7 @@
 //  History:
 //  2022-02-02  asc Creation.
 //  2022-02-04  asc Added Cancel method.
+//  2022-03-02  asc Added StreamBufTransfer() method.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_SUBPROCESS_H
@@ -48,6 +49,7 @@ namespace cp
         bool IsRunning();                                   // check if subprocess currently running
         void WaitUntilDone();                               // returns when subprocess completes
         void BufferExtract(Buffer &Buf);                    // copy out the stream buffer
+        void StreamBufTransfer(StreamBuf &Dest);            // transfer out the stream buffer
 
     private:
         void IoThread();                                    // I/O thread function

@@ -20,6 +20,7 @@
 //  2013-08-07  asc Replaced byte order state with separate B/L insertion methods.
 //  2013-08-29  asc Refactored Clear() operation to eliminate pitfalls.
 //  2013-11-15  asc Implemented CRC calculation.
+//  2022-03-15  asc Added flag to return terminator, if present, with ReadLine().
 // ----------------------------------------------------------------------------
 
 #include "cpStreamBase.h"
@@ -396,7 +397,7 @@ bool StreamBase::Write(char Ch)
 
 
 // read until terminator or buf size
-bool StreamBase::ReadLine(String &Line, char Term)
+bool StreamBase::ReadLine(String &Line, char Term, bool DiscardTerm)
 {
     char ch;
     bool rv = true;
@@ -414,6 +415,11 @@ bool StreamBase::ReadLine(String &Line, char Term)
         {
             if (ch == Term)
             {
+                if (!DiscardTerm)
+                {
+                    Line += ch;
+                }
+
                 exitFlag = true;
             }
             else

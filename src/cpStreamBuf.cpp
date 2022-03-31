@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2013-04-22  asc Added conversion assignment operator from Buffer.
 //  2013-08-29  asc Refactored Clear() operation to eliminate inheritance pitfalls.
+//  2022-03-02  asc Added TransferBlocks() method.
 // ----------------------------------------------------------------------------
 
 #include "cpStreamBuf.h"
@@ -74,6 +75,21 @@ StreamBuf &StreamBuf::operator=(Buffer const &rhs)
     Write(rhs, rhs.LenGet());
 
     return *this;
+}
+
+
+// transfer memory blocks from src
+void StreamBuf::TransferBlocksFrom(StreamBuf &src)
+{
+    Clear();
+    m_VecBlocks = src.m_VecBlocks;
+    // empty src vector otherwise src.Clear() will deallocate the blocks
+    src.m_VecBlocks.clear();
+    m_CurBlock = src.m_CurBlock;
+    m_CurPos = src.m_CurPos;
+    m_LastBlock = src.m_LastBlock;
+    m_LastPos = src.m_LastPos;
+    src.Clear();
 }
 
 

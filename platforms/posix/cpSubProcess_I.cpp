@@ -14,6 +14,7 @@
 //  History:
 //  2022-02-02  asc Creation.
 //  2022-02-04  asc Added Cancel method.
+//  2022-03-02  asc Added StreamBufTransfer() method.
 // ----------------------------------------------------------------------------
 
 // (.)(.) 2022-02-03 asc Need to implement the k_FlowIn mode.
@@ -87,18 +88,21 @@ SubProcess::~SubProcess()
 }
 
 
+// cancel execution
 void SubProcess::Cancel()
 {
     m_IoThread.ExitReq();
 }
 
 
+// check if subprocess currently running
 bool SubProcess::IsRunning()
 {
     return !m_Completed.TryTake();
 }
 
 
+// returns when subprocess completes
 void SubProcess::WaitUntilDone()
 {
     m_Completed.Take();
@@ -107,6 +111,7 @@ void SubProcess::WaitUntilDone()
 }
 
 
+// copy out the stream buffer
 void SubProcess::BufferExtract(Buffer &Buf)
 {
     m_SyncIo.Lock();
@@ -116,6 +121,15 @@ void SubProcess::BufferExtract(Buffer &Buf)
     Buf = m_RxBuffer;
     // clear the receive buffer
     m_RxBuffer.Clear();
+    m_SyncIo.Unlock();
+}
+
+
+// transfer out the stream buffer
+void SubProcess::StreamBufTransfer(StreamBuf &Dest)
+{
+    m_SyncIo.Lock();
+    Dest.TransferBlocksFrom(m_RxBuffer);
     m_SyncIo.Unlock();
 }
 

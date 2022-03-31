@@ -17,6 +17,7 @@
 //  2013-06-03  asc Added primitive data serializers.
 //  2013-08-07  asc Replaced byte order state with separate B/L insertion methods.
 //  2013-08-29  asc Refactored Clear() operation to eliminate inheritance pitfalls.
+//  2022-03-15  asc Added flag to return terminator, if present, with ReadLine().
 // ----------------------------------------------------------------------------
 #ifndef CP_STREAMBASE_H
 #define CP_STREAMBASE_H
@@ -57,7 +58,8 @@ public:
     bool Read(char &Ch);                                    // read one octet from stream
     bool Write(char Ch);                                    // write one octet to stream
 
-    bool ReadLine(String &Line, char Term = '\n');          // read until terminator or buf size
+    bool ReadLine(String &Line, char Term = '\n',
+                  bool DiscardTerm = true);                 // read until terminator or buf size
     bool BinDump(std::ostream &Out);                        // binary dump contents to an ostream object
     bool HexDump(std::ostream &Out);                        // hex dump contents to an ostream object
     bool BinLoad(std::istream &In);                         // binary load contents from an ostream object
