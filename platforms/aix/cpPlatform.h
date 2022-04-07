@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2013-11-15  asc Added cstdlib and csignal headers.
 //  2021-12-16  asc Added ThreadYield_Impl().
+//  2022-04-07  asc Added vasprintf.h include.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -45,6 +46,7 @@
 #include <iomanip>
 #include "cpTypes.h"
 #include "cpConstants.h"
+#include "vasprintf.h"
 
 // ----------------------------------------------------------------------------
 
