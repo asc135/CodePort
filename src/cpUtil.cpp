@@ -20,6 +20,7 @@
 //  2013-12-18  asc Changed output parameter of Tokenize() to StringVec_t.
 //  2013-12-18  asc Added Lchomp() and Rchomp() functions.
 //  2014-03-30  asc Added ReadFile() and WriteFile() functions.
+//  2022-04-18  asc Added .is_open() test for streams to workaround AIX bug.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -801,7 +802,7 @@ size_t ReadFile(String const &Path, Buffer &FileData)
     size_t fileLen = 0;
     size_t numRead = 0;
 
-    if (dataFile.good())
+    if (dataFile.is_open() && dataFile.good())
     {
         fileLen = dataFile.tellg();
 
@@ -828,7 +829,7 @@ size_t WriteFile(String const &Path, Buffer &FileData)
     size_t fileLen = 0;
     size_t numWritten = 0;
 
-    if (dataFile.good())
+    if (dataFile.is_open() && dataFile.good())
     {
         fileLen = FileData.LenGet();
 
