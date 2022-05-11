@@ -15,6 +15,7 @@
 //  2010-10-10  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2012-08-31  asc Added copy constructors to match conversion assignment operators.
+//  2022-05-10  asc Added list and vector containers for Buffer.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_BUFFER_H
@@ -88,6 +89,11 @@ private:
     MemBlock           *m_PtrBlock;                         // pointer to managed memory block
     size_t              m_DataLen;                          // length of buffer used
 };
+
+
+// define some useful buffer container types
+typedef std::list<Buffer, Alloc<Buffer> > BufferList_t;
+typedef std::vector<Buffer, Alloc<Buffer> > BufferVec_t;
 
 }   // namespace cp
 
