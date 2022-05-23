@@ -17,6 +17,7 @@
 //  2013-11-15  asc Added cstdlib and csignal headers.
 //  2021-12-16  asc Added ThreadYield_Impl().
 //  2022-04-07  asc Added vasprintf.h include.
+//  2022-05-23  asc Added netdb.h include.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -34,6 +35,7 @@
 //#include <sys/signal.h>
 //#include <sys/syscall.h>
 //#include <netinet/in.h>
+#include <netdb.h>
 
 // ----------------------------------------------------------------------------
 
