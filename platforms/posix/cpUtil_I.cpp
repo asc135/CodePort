@@ -21,6 +21,7 @@
 //  2014-10-22  asc Applied patch from K. Holmes to fix Time64() overflow on 32-bit systems.
 //  2021-12-16  asc Added ThreadYield_Impl() for portability.
 //  2021-12-17  asc Added AF_INET check for portability.
+//  2022-05-22  asc Added HostName() and DomainName() functions.
 // ----------------------------------------------------------------------------
 
 #include <arpa/inet.h>
@@ -322,6 +323,42 @@ uint32_t StrToIpv4(String Addr)
     }
 
     return rv;
+}
+
+
+// obtain the system's host name
+String &HostName(String &Name)
+{
+    char buf[256];
+
+    if (gethostname(buf, sizeof(buf)) == 0)
+    {
+        Name = buf;
+    }
+    else
+    {
+        Name.clear();
+    }
+
+    return Name;
+}
+
+
+// obtain the system's domain name
+String &DomainName(String &Name)
+{
+    char buf[256];
+
+    if (getdomainname(buf, sizeof(buf)) == 0)
+    {
+        Name = buf;
+    }
+    else
+    {
+        Name.clear();
+    }
+
+    return Name;
 }
 
 }   // namespace cp

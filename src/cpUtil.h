@@ -22,6 +22,7 @@
 //  2013-12-18  asc Changed output parameter of Tokenize() to StringVec_t.
 //  2013-12-18  asc Added Lchomp() and Rchomp() functions.
 //  2014-03-30  asc Added ReadFile() and WriteFile() functions.
+//  2022-05-22  asc Added HostName() and DomainName() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -284,6 +285,12 @@ size_t ReadFile(String const &Path, Buffer &FileData);
 
 // write the contents of a buffer into a file
 size_t WriteFile(String const &Path, Buffer &FileData);
+
+// obtain the system's host name
+String &HostName(String &Name);
+
+// obtain the system's domain namae
+String &DomainName(String &Name);
 
 // ASCII standard control codes
 enum AsciiControlCodes
