@@ -23,6 +23,7 @@
 //  2013-12-18  asc Added Lchomp() and Rchomp() functions.
 //  2014-03-30  asc Added ReadFile() and WriteFile() functions.
 //  2022-05-22  asc Added HostName() and DomainName() functions.
+//  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -173,6 +174,12 @@ String IntToStr(int Val);
 
 // converts unsigned to string integer
 String UintToStr(uint32_t Val);
+
+// converts integer to string
+String Int64ToStr(int64_t Val);
+
+// converts unsigned to string integer
+String Uint64ToStr(uint64_t Val);
 
 // converts float to string
 String FloatToStr(double Val);

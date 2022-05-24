@@ -21,6 +21,7 @@
 //  2013-12-18  asc Added Lchomp() and Rchomp() functions.
 //  2014-03-30  asc Added ReadFile() and WriteFile() functions.
 //  2022-04-18  asc Added .is_open() test for streams to workaround AIX bug.
+//  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -319,6 +320,28 @@ String UintToStr(uint32_t Val)
     Buffer buf(32);
 
     snprintf(buf, buf, "%u", Val);
+
+    return buf.c_str();
+}
+
+
+// converts integer to string
+String Int64ToStr(int64_t Val)
+{
+    Buffer buf(64);
+
+    snprintf(buf, buf, "%ld", Val);
+
+    return buf.c_str();
+}
+
+
+// converts unsigned to string integer
+String Uint64ToStr(uint64_t Val)
+{
+    Buffer buf(64);
+
+    snprintf(buf, buf, "%lu", Val);
 
     return buf.c_str();
 }
