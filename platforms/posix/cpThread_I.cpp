@@ -21,6 +21,8 @@
 //  2013-02-15  asc Added exit callback function to provide "join" type capability.
 //  2013-02-15  asc Moved thread state into common implementation.
 //  2013-02-21  asc Moved Trampoline() into an embedded class to make InvokeUserFunc() private.
+//  2022-05-25  asc Added support for setting the stack size via the constructor parameter.
+//  2022-05-25  asc Added a minimum thread stack size due to AIX's default 92KB stack size.
 // ----------------------------------------------------------------------------
 
 #include "cpThread.h"
@@ -63,17 +65,41 @@ public:
 bool Thread::ThreadStart(uint8_t Priority, size_t StackSize)
 {
     bool rv = (m_PtrFunc != NULL);
+    pthread_attr_t attr;
+
+    // initialize attributes
+    if (rv)
+    {
+        rv = (pthread_attr_init(&attr) == 0);
+    }
 
     // not currently used in this implementation
     (void)Priority;
 
-    // posix defines this system-wide with ulimit
-    (void)StackSize;
+    // set the requested stack size
+    if (rv)
+    {
+        size_t minStackSize = 1024 * 1024;
+        size_t stackSize = (StackSize > minStackSize) ? StackSize : minStackSize;
+        size_t defaultSize = 0;
+
+        if (pthread_attr_getstacksize(&attr, &defaultSize))
+        {
+            if (defaultSize < stackSize)
+            {
+                // posix defines this system-wide with ulimit
+                rv = pthread_attr_setstacksize(&attr, stackSize);
+            }
+        }
+    }
 
     if (rv)
     {
         // create a non-realtime posix thread
-        rv = (pthread_create(&m_Thread, NULL, Thread::NativeThreadFunc::Trampoline, this) == 0);
+        rv = (pthread_create(&m_Thread, &attr, Thread::NativeThreadFunc::Trampoline, this) == 0);
+
+        // destroy the attributes structure
+        pthread_attr_destroy(&attr);
     }
 
     // detach thread to free resources at thread termination
