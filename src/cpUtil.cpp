@@ -22,9 +22,11 @@
 //  2014-03-30  asc Added ReadFile() and WriteFile() functions.
 //  2022-04-18  asc Added .is_open() test for streams to workaround AIX bug.
 //  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
+//  2022-05-25  asc Switched to printf macros for stdint.h types portability.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
+#include <cinttypes>
 
 #include "cpUtil.h"
 #include "cpBuffer.h"
@@ -330,7 +332,7 @@ String Int64ToStr(int64_t Val)
 {
     Buffer buf(64);
 
-    snprintf(buf, buf, "%ld", Val);
+    snprintf(buf, buf, "%" PRId64, Val);
 
     return buf.c_str();
 }
@@ -341,7 +343,7 @@ String Uint64ToStr(uint64_t Val)
 {
     Buffer buf(64);
 
-    snprintf(buf, buf, "%lu", Val);
+    snprintf(buf, buf, "%" PRIu64, Val);
 
     return buf.c_str();
 }

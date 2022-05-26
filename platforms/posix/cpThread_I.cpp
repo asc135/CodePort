@@ -79,16 +79,19 @@ bool Thread::ThreadStart(uint8_t Priority, size_t StackSize)
     // set the requested stack size
     if (rv)
     {
-        size_t minStackSize = 1024 * 1024;
+        // minimum stack size is 2MB
+        size_t minStackSize = 2 * 1024 * 1024;
         size_t stackSize = (StackSize > minStackSize) ? StackSize : minStackSize;
         size_t defaultSize = 0;
 
-        if (pthread_attr_getstacksize(&attr, &defaultSize))
+        // get the default stack size from pthreads
+        if (pthread_attr_getstacksize(&attr, &defaultSize) == 0)
         {
+            // if default is too small, set it to the minimum or the requested size
             if (defaultSize < stackSize)
             {
                 // posix defines this system-wide with ulimit
-                rv = pthread_attr_setstacksize(&attr, stackSize);
+                rv = (pthread_attr_setstacksize(&attr, stackSize) == 0);
             }
         }
     }
