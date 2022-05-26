@@ -14,7 +14,8 @@
 //  History:
 //  2011-08-01  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
-//  2013-04-03  asc Cleared outpu string in HexEncode().
+//  2013-04-03  asc Cleared output string in HexEncode().
+//  2022-05-26  asc Made Input buffer to HexEncode a const.
 // ----------------------------------------------------------------------------
 
 #include <cstdlib>
@@ -52,7 +53,7 @@ void HexIoCfg::Display()
 
 
 // encode a block of data to ASCII hex
-size_t HexEncode(Buffer &Input, String &Output, HexIoCfg &Form)
+size_t HexEncode(Buffer const &Input, String &Output, HexIoCfg &Form)
 {
     Buffer buf(16);
 

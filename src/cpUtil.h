@@ -24,6 +24,7 @@
 //  2014-03-30  asc Added ReadFile() and WriteFile() functions.
 //  2022-05-22  asc Added HostName() and DomainName() functions.
 //  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
+//  2022-05-26  asc Made Input buffer to HexEncode a const.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -137,7 +138,7 @@ bool HexDump(std::ostream &Out, char const *Data, size_t DataLen, size_t LineLen
 bool HexDump(std::ostream &Out, uint8_t const *Data, size_t DataLen, size_t LineLen = 16);
 
 // Encode a block of data to ASCII hex
-size_t HexEncode(Buffer &Input, String &Output, HexIoCfg &Form);
+size_t HexEncode(Buffer const &Input, String &Output, HexIoCfg &Form);
 
 // decode a block of ASCII hex data
 size_t HexDecode(String const &Input, Buffer &Output);
