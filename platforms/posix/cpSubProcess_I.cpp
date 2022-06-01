@@ -25,6 +25,9 @@
 // portable portions (majority of the module) can be moved to src from platform/posix
 // with the posix-specific bits kept in the implementation file.
 
+#include <unistd.h>
+#include <fcntl.h>
+
 #include "cpUtil.h"
 #include "cpBuffer.h"
 #include "cpSubProcess.h"
@@ -37,6 +40,7 @@ SubProcess::SubProcess(cp::String const &Command, SubProcIoDirection Dir) :
     Base("SubProcess: " + Command),
     m_Dir(Dir),
     m_PtrHandle(0),
+    m_Descriptor(0),
     m_IoThread("SubProcess Thread: " + Command, ThreadFunction, this, Thread::opt_Suspended),
     m_Completed("SubProcess Semaphore", 0, 1)
 {
@@ -65,6 +69,10 @@ SubProcess::SubProcess(cp::String const &Command, SubProcIoDirection Dir) :
 
         if (m_PtrHandle)
         {
+            // mark the underlying descriptor as non-blocking
+            m_Descriptor = fileno(m_PtrHandle);
+            fcntl(m_Descriptor, F_SETFL, O_NONBLOCK);
+
             // if success, mark instance valid and start the I/O thread
             m_Valid = true;
             m_IoThread.Resume();
@@ -83,6 +91,8 @@ SubProcess::~SubProcess()
 {
     if (m_Valid)
     {
+        Cancel();
+        WaitUntilDone();
         pclose(m_PtrHandle);
     }
 }
@@ -98,7 +108,14 @@ void SubProcess::Cancel()
 // check if subprocess currently running
 bool SubProcess::IsRunning()
 {
-    return !m_Completed.TryTake();
+    bool rv = m_Completed.TryTake();
+
+    if (rv)
+    {
+        m_Completed.Give();
+    }
+
+    return !rv;
 }
 
 
@@ -107,7 +124,6 @@ void SubProcess::WaitUntilDone()
 {
     m_Completed.Take();
     m_Completed.Give();
-    return;
 }
 
 
@@ -140,11 +156,17 @@ void SubProcess::IoThread()
     cp::Buffer buf(128);
 
     // loop while thread is active and handle is valid and not end of file
-    while (m_IoThread.ThreadPoll() && m_PtrHandle && !feof(m_PtrHandle))
+    while (m_IoThread.ThreadPoll())
     {
+        ssize_t result;
+
         // attempt to read from handle
-        if (fgets(buf.c_str(), buf.Size(), m_PtrHandle) != NULL)
+        result = read(m_Descriptor, buf.c_str(), buf.Size() - 1);
+
+        if (result > 0)
         {
+            // terminate the data
+            buf.c_str()[result] = '\0';
             m_SyncIo.Lock();
             m_RxBuffer.StringInsert(buf.c_str());
             m_SyncIo.Unlock();
@@ -165,7 +187,6 @@ void SubProcess::IoThread()
 void *SubProcess::ThreadFunction(cp::Thread *pThread)
 {
     reinterpret_cast<SubProcess *>(pThread->ContextGet())->IoThread();
-
     return pThread;
 }
 

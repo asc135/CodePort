@@ -24,6 +24,7 @@ namespace cp
 {
 
 typedef FILE SubProcessHandle_t;
+typedef int SubProcessDesc_t;
 
 }   // namespace cp
 

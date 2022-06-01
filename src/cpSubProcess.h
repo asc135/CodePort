@@ -57,6 +57,7 @@ private:
 
     SubProcIoDirection  m_Dir;                              // direction of I/O with parent process
     SubProcessHandle_t *m_PtrHandle;                        // native storage for read/write handle
+    SubProcessDesc_t    m_Descriptor;                       // descriptor for read
     Thread              m_IoThread;                         // input / output thread
     StreamBuf           m_RxBuffer;                         // subprocess receive buffer
     SemLite             m_Completed;                        // semaphore to signal end of operation
