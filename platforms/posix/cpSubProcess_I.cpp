@@ -15,6 +15,7 @@
 //  2022-02-02  asc Creation.
 //  2022-02-04  asc Added Cancel method.
 //  2022-03-02  asc Added StreamBufTransfer() method.
+//  2022-06-02  asc Changed to ArrayWr() to avoid constructing a String.
 // ----------------------------------------------------------------------------
 
 // (.)(.) 2022-02-03 asc Need to implement the k_FlowIn mode.
@@ -168,7 +169,7 @@ void SubProcess::IoThread()
             // terminate the data
             buf.c_str()[result] = '\0';
             m_SyncIo.Lock();
-            m_RxBuffer.StringInsert(buf.c_str());
+            m_RxBuffer.ArrayWr(buf.c_str(), result + 1);
             m_SyncIo.Unlock();
         }
         else
