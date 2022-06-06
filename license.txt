@@ -1,4 +1,7 @@
-Copyright 2010-2021, Amardeep S. Chana
+CodePort Library
+
+MIT LICENSE
+Copyright 2010-2022, Amardeep S. Chana
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
