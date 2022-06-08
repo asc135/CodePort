@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2013-11-15  asc Added cstdlib and csignal headers.
 //  2021-12-16  asc Added ThreadYield_Impl().
+//  2022-06-07  asc Added prototype for getdomainname() which is undeclared in Solaris.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -33,6 +34,16 @@
 //#include <sys/signal.h>
 //#include <sys/syscall.h>
 //#include <netinet/in.h>
+
+// ----------------------------------------------------------------------------
+
+// Solaris doesn't declare getdomainname() in either unistd.h or netdb.h.
+// Also the namelen parameter is 'int' instead of 'size_t' as in libc.
+// Projects must reference -lnsl.
+extern "C"
+{
+    int getdomainname(char *name, int namelen);
+}
 
 // ----------------------------------------------------------------------------
 
