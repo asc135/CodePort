@@ -25,6 +25,8 @@
 //  2022-05-22  asc Added HostName() and DomainName() functions.
 //  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
 //  2022-05-26  asc Made Input buffer to HexEncode a const.
+//  2022-06-09  asc Added CpuTime64() function.
+//  2022-06-10  asc Added CpuCount(), RunProgramGetOutput(), and BufferToLines() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -99,6 +101,9 @@ bool PathCreate(String const &PathName);
 // start a new process
 uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, StringVec_t const &EnvVars);
 
+// run a program and get its output
+bool RunProgramGetOutput(cp::String const &Command, StringVec_t &Output);
+
 // get current task identifier
 uint32_t TaskId();
 
@@ -119,6 +124,12 @@ uint32_t Time32();
 
 // return time in milliseconds (unix epoch)
 uint64_t Time64();
+
+// return process CPU time in milliseconds
+uint64_t CpuTime64();
+
+// return number of CPUs in the system
+uint32_t CpuCount();
 
 // suspend execution for second intervals
 bool Sleep(uint32_t Delay);
@@ -190,6 +201,9 @@ String BoolToStr(bool Val);
 
 // tokenize a string into a vector of strings
 size_t Tokenize(String const &StringIn, String const &Delim, StringVec_t &TokensOut);
+
+// break a text buffer into a vector of lines
+void BufferToLines(char const *pBufferIn, size_t BufferSize, StringVec_t &LinesOut);
 
 // reverse the bits in an octet
 uint8_t Reflect8(uint8_t Val);

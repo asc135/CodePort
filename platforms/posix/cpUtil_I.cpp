@@ -22,6 +22,8 @@
 //  2021-12-16  asc Added ThreadYield_Impl() for portability.
 //  2021-12-17  asc Added AF_INET check for portability.
 //  2022-05-22  asc Added HostName() and DomainName() functions.
+//  2022-06-09  asc Added CpuTime64() function.
+//  2022-06-10  asc Added RunProgramGetOutput() function.
 // ----------------------------------------------------------------------------
 
 #include <arpa/inet.h>
@@ -32,6 +34,8 @@
 #include <ctime>
 
 #include "cpUtil.h"
+#include "cpBuffer.h"
+#include "cpSubProcess.h"
 
 #ifndef AF_INET
 #include <sys/socket.h>
@@ -183,6 +187,28 @@ uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, Strin
 }
 
 
+// run a program and get its output
+bool RunProgramGetOutput(cp::String const &Command, StringVec_t &Output)
+{
+    cp::SubProcess proc(Command, k_FlowOut);
+    bool rv = proc.IsValid();
+
+    if (rv)
+    {
+        cp::Buffer buf;
+        proc.WaitUntilDone();
+        proc.BufferExtract(buf);
+
+        if (buf.Size())
+        {
+            BufferToLines(buf.c_str(), buf.LenGet(), Output);
+        }
+    }
+
+    return rv;
+}
+
+
 // get current task identifier
 uint32_t TaskId()
 {
@@ -247,6 +273,21 @@ uint64_t Time64()
     }
 
     return ms;
+}
+
+
+// return process CPU time in milliseconds
+uint64_t CpuTime64()
+{
+    uint64_t rv = 0;
+    timespec tm;
+
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &tm) == 0)
+    {
+        rv = (tm.tv_sec * 1000) + (tm.tv_nsec / 1000000);
+    }
+
+    return rv;
 }
 
 

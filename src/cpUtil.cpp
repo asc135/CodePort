@@ -23,6 +23,7 @@
 //  2022-04-18  asc Added .is_open() test for streams to workaround AIX bug.
 //  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
 //  2022-05-25  asc Switched to printf macros for stdint.h types portability.
+//  2022-06-10  asc Added BufferToLines() function.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -416,6 +417,74 @@ size_t Tokenize(String const &StringIn, String const &Delim, StringVec_t &Tokens
     }
 
     return TokensOut.size();
+}
+
+
+// break a text buffer into a vector of lines
+void BufferToLines(char const *pBufferIn, size_t BufferSize, StringVec_t &LinesOut)
+{
+    char const *start = pBufferIn;
+    char const *ptr = start;
+    size_t lineLen = 0;
+    size_t count = BufferSize;
+
+    LinesOut.clear();
+
+    // return if invalid buffer
+    if (!start)
+    {
+        return;
+    }
+
+    while (count--)
+    {
+        // check if we found a line ending
+        if (*ptr == '\n' || *ptr == '\r')
+        {
+            // determine line length
+            lineLen = ptr - start;
+
+            // add the line to the output vector
+            if (lineLen)
+            {
+                LinesOut.emplace_back(start, lineLen);
+            }
+            else
+            {
+                LinesOut.push_back("");
+            }
+
+            // check if it is a conjugate line ending (two chars like \n\r or \r\n)
+            if (count > 0)
+            {
+                if ((*ptr == '\n' && *(ptr + 1) == '\r') || (*ptr == '\r' && *(ptr + 1) == '\n'))
+                {
+                    // conjugate line ending found, skip over second character
+                    ++ptr;
+                }
+            }
+
+            // increment the pointer and assign the new string start position
+            ++ptr;
+            start = ptr;
+        }
+        else
+        {
+            // check if buffer end reached without a line ending
+            if (count == 0)
+            {
+                lineLen = ptr - start + 1;
+
+                if (lineLen)
+                {
+                    LinesOut.emplace_back(start, lineLen);
+                }
+            }
+
+            // increment the pointer
+            ++ptr;
+        }
+    }
 }
 
 
