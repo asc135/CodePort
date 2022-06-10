@@ -26,7 +26,7 @@
 //  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
 //  2022-05-26  asc Made Input buffer to HexEncode a const.
 //  2022-06-09  asc Added CpuTime64() function.
-//  2022-06-10  asc Added CpuCount(), RunProgramGetOutput(), and BufferToLines() functions.
+//  2022-06-10  asc Added RunProgramGetOutput(), and BufferToLines() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -127,9 +127,6 @@ uint64_t Time64();
 
 // return process CPU time in milliseconds
 uint64_t CpuTime64();
-
-// return number of CPUs in the system
-uint32_t CpuCount();
 
 // suspend execution for second intervals
 bool Sleep(uint32_t Delay);

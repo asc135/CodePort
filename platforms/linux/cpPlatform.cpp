@@ -16,7 +16,6 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2021-12-16  asc Added ThreadYield_Impl().
 //  2021-12-16  asc Replaced syscall(SYS_gettid) with pthread_self().
-//  2022-06-10  asc Added CpuCount() function.
 // ----------------------------------------------------------------------------
 
 #include "cpPlatform.h"
@@ -37,15 +36,6 @@ uint32_t ThreadId_Impl()
 uint32_t ThreadYield_Impl()
 {
     return static_cast<uint32_t>(pthread_yield());
-}
-
-// return number of CPUs in the system
-uint32_t CpuCount()
-{
-    uint32_t rv = 0;
-    // count entries in /proc/cpuinfo
-    // lscpu | grep "^CPU(s):" | cut -f 2 -d":"
-    return rv;
 }
 
 }   // namespace cp

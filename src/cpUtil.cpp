@@ -438,8 +438,8 @@ void BufferToLines(char const *pBufferIn, size_t BufferSize, StringVec_t &LinesO
 
     while (count--)
     {
-        // check if we found a line ending
-        if (*ptr == '\n' || *ptr == '\r')
+        // check if we found a line ending or NULL
+        if (*ptr == '\n' || *ptr == '\r' || *ptr == 0)
         {
             // determine line length
             lineLen = ptr - start;
@@ -451,7 +451,10 @@ void BufferToLines(char const *pBufferIn, size_t BufferSize, StringVec_t &LinesO
             }
             else
             {
-                LinesOut.push_back("");
+                if (*ptr != 0)
+                {
+                    LinesOut.push_back("");
+                }
             }
 
             // check if it is a conjugate line ending (two chars like \n\r or \r\n)
@@ -461,6 +464,7 @@ void BufferToLines(char const *pBufferIn, size_t BufferSize, StringVec_t &LinesO
                 {
                     // conjugate line ending found, skip over second character
                     ++ptr;
+                    --count;
                 }
             }
 
