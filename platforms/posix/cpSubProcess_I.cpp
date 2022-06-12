@@ -16,6 +16,7 @@
 //  2022-02-04  asc Added Cancel method.
 //  2022-03-02  asc Added StreamBufTransfer() method.
 //  2022-06-02  asc Changed to ArrayWr() to avoid constructing a String.
+//  2022-06-12  asc Added detection of subprocess termination and handling.
 // ----------------------------------------------------------------------------
 
 // (.)(.) 2022-02-03 asc Need to implement the k_FlowIn mode.
@@ -174,8 +175,16 @@ void SubProcess::IoThread()
         }
         else
         {
-            // otherwise delay 200mS
-            cp::MilliSleep(200);
+            // returns 0 if pipe is closed from other end (i.e. process terminated)
+            if (result == 0)
+            {
+                m_IoThread.ExitReq();
+            }
+            else
+            {
+                // otherwise delay to give time for more data to arrive
+                cp::MilliSleep(200);
+            }
         }
     }
 
