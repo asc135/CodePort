@@ -17,6 +17,7 @@
 //  2022-03-02  asc Added StreamBufTransfer() method.
 //  2022-06-02  asc Changed to ArrayWr() to avoid constructing a String.
 //  2022-06-12  asc Added detection of subprocess termination and handling.
+//  2022-06-14  asc Increased read buffer size and removed string terminator on each read.
 // ----------------------------------------------------------------------------
 
 // (.)(.) 2022-02-03 asc Need to implement the k_FlowIn mode.
@@ -155,7 +156,7 @@ void SubProcess::StreamBufTransfer(StreamBuf &Dest)
 // subprocess I/O thread function
 void SubProcess::IoThread()
 {
-    cp::Buffer buf(128);
+    cp::Buffer buf(256);
 
     // loop while thread is active and handle is valid and not end of file
     while (m_IoThread.ThreadPoll())
@@ -163,14 +164,13 @@ void SubProcess::IoThread()
         ssize_t result;
 
         // attempt to read from handle
-        result = read(m_Descriptor, buf.c_str(), buf.Size() - 1);
+        result = read(m_Descriptor, buf.c_str(), buf.Size());
 
         if (result > 0)
         {
             // terminate the data
-            buf.c_str()[result] = '\0';
             m_SyncIo.Lock();
-            m_RxBuffer.ArrayWr(buf.c_str(), result + 1);
+            m_RxBuffer.ArrayWr(buf.c_str(), result);
             m_SyncIo.Unlock();
         }
         else
