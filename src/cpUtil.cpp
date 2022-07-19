@@ -24,6 +24,7 @@
 //  2022-05-23  asc Added Int64ToStr() and Uint64ToStr() functions.
 //  2022-05-25  asc Switched to printf macros for stdint.h types portability.
 //  2022-06-10  asc Added BufferToLines() function.
+//  2022-07-08  asc Modified Tokenize() to not eat spaces.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -385,17 +386,9 @@ size_t Tokenize(String const &StringIn, String const &Delim, StringVec_t &Tokens
     TokensOut.clear();
     remains = StringIn;
 
-    // locate spaces and break up string into tokens
-    while (remains.size())
+    // locate delimiters and break up string into tokens
+    while (remains.length())
     {
-        // strip off any leading spaces
-        n = remains.find_first_not_of(" ");
-
-        if (n != String::npos)
-        {
-            remains = remains.substr(n);
-        }
-
         // locate delimiter if present
         n = remains.find(Delim);
 
@@ -404,7 +397,7 @@ size_t Tokenize(String const &StringIn, String const &Delim, StringVec_t &Tokens
         if (n != String::npos)
         {
             token = remains.substr(0, n);
-            remains = remains.substr(n + Delim.size());
+            remains = remains.substr(n + Delim.length());
         }
         else
         {
