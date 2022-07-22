@@ -16,7 +16,10 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2021-12-16  asc Added ThreadYield_Impl().
 //  2021-12-16  asc Replaced syscall(SYS_gettid) with pthread_self().
+//  2022-07-22  asc Replaced deprecated pthread_yield() with sched_yield().
 // ----------------------------------------------------------------------------
+
+#include <sched.h>
 
 #include "cpPlatform.h"
 
@@ -35,7 +38,7 @@ uint32_t ThreadId_Impl()
 // thread yield implementation
 uint32_t ThreadYield_Impl()
 {
-    return static_cast<uint32_t>(pthread_yield());
+    return static_cast<uint32_t>(sched_yield());
 }
 
 }   // namespace cp
