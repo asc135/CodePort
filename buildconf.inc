@@ -12,7 +12,7 @@
 #   2013-12-19  asc Adapted to symlink-free CodePort configuration.
 #   2021-11-04  asc Added -std=c++98 to config cflags.
 #   2022-02-28  asc Switched to -std=c++20 (-std=c++2a for g++ ver <= 9).
-#   2022-04-07  asc Switched back to -std=c++17 for broader compiler support.
+#   2022-04-07  asc Switched to -std=c++17 and separated CPPFLAGS.
 ###############################################################################
 
 #
@@ -55,13 +55,14 @@ include $(CODEPORT)/platforms/$(PLATFORM)/platform.inc
 #
 # Project Compiler and Linker Flags
 #
+PROJECT_CPPFLAGS = -std=c++17
 PROJECT_CFLAGS = -Wall -Wextra -pedantic -Werror
 PROJECT_LFLAGS =
 
 #
 # Configuration Compiler and Linker Flags
 #
-CPPFLAGS = -std=c++17
+CONFIG_CPPFLAGS =
 CONFIG_CFLAGS =
 CONFIG_LFLAGS =
 

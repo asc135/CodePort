@@ -27,6 +27,7 @@
 //  2022-05-26  asc Made Input buffer to HexEncode a const.
 //  2022-06-09  asc Added CpuTime64() function.
 //  2022-06-10  asc Added RunProgramGetOutput(), and BufferToLines() functions.
+//  2022-09-09  asc Added CheckAlphaNumeric() function.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -310,6 +311,9 @@ String &HostName(String &Name);
 
 // obtain the system's domain namae
 String &DomainName(String &Name);
+
+// check if a string is alphanumeric
+bool CheckAlphaNumeric(String const &Input);
 
 // ASCII standard control codes
 enum AsciiControlCodes

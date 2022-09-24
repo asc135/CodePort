@@ -25,6 +25,7 @@
 //  2022-05-25  asc Switched to printf macros for stdint.h types portability.
 //  2022-06-10  asc Added BufferToLines() function.
 //  2022-07-08  asc Modified Tokenize() to not eat spaces.
+//  2022-09-09  asc Added CheckAlphaNumeric() function.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -932,6 +933,20 @@ size_t WriteFile(String const &Path, Buffer &FileData)
     }
 
     return numWritten;
+}
+
+
+// check if a string is alphanumeric
+bool CheckAlphaNumeric(String const &Input)
+{
+    bool rv = !Input.empty();
+
+    for (auto ch : Input)
+    {
+        rv = rv && (((ch >= '0' ) && (ch <= '9')) || ((ch >= 'A') && (ch <= 'Z')) || ((ch >= 'a') && (ch <= 'z')));
+    }
+
+    return rv;
 }
 
 }   // namespace cp
