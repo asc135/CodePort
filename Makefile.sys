@@ -14,6 +14,8 @@
 #   2022-06-07  asc Cleaned up compiler flags.
 #   2022-09-23  asc Added compiler flags to dependency generation.
 #   2022-09-23  asc Replaced @if [ -e with -f for /bin/sh compatibility.
+#   2022-10-06  asc Added LOCAL_LIBS and LOCAL_INCS.
+#   2022-10-06  asc Switched from = to := where possible (expand at assignment).
 #
 ######################################################################
 
@@ -26,14 +28,14 @@ include buildconf.inc
 # Determine File Extensions
 #
 ifeq ($(LIBRARY_BUILD), false)
-	EXT = $(EXEC_EXT)
+	EXT := $(EXEC_EXT)
 else
     ifeq ($(LIBRARY_TYPE), static)
-		EXT = $(STATIC_LIB_EXT)
+		EXT := $(STATIC_LIB_EXT)
     endif
 
     ifeq ($(LIBRARY_TYPE), shared)
-		EXT = $(SHARED_LIB_EXT)
+		EXT := $(SHARED_LIB_EXT)
     endif
 endif
 
@@ -45,21 +47,21 @@ VPATH := $(OBJ_PATH) $(shell find -L $(SRC_PATH) -type d -print | tr '\n' ' ')
 #
 # Build Tool Binary Aliases
 #
-AS = $(BUILD_TOOL)as
-CC = $(BUILD_TOOL)gcc
-CPP = $(BUILD_TOOL)g++
-LD = $(BUILD_TOOL)ld
-OD = $(BUILD_TOOL)objdump
-OC = $(BUILD_TOOL)objcopy
-ST = $(BUILD_TOOL)strip
-RM = rm
+AS := $(BUILD_TOOL)as
+CC := $(BUILD_TOOL)gcc
+CPP := $(BUILD_TOOL)g++
+LD := $(BUILD_TOOL)ld
+OD := $(BUILD_TOOL)objdump
+OC := $(BUILD_TOOL)objcopy
+ST := $(BUILD_TOOL)strip
+RM := rm
 
 #
 # Create List of Compiler and Linker Flags
 #
-CPPFLAGS = $(PLATFORM_CPPFLAGS) $(CONFIG_CPPFLAGS) $(PROJECT_CPPFLAGS)
-CFLAGS = $(PLATFORM_CFLAGS) $(CONFIG_CFLAGS) $(PROJECT_CFLAGS)
-LFLAGS = $(PLATFORM_LFLAGS) $(CONFIG_LFLAGS) $(PROJECT_LFLAGS)
+CPPFLAGS := $(PLATFORM_CPPFLAGS) $(PROJECT_CPPFLAGS) $(LOCAL_CPPFLAGS)
+CFLAGS := $(PLATFORM_CFLAGS) $(PROJECT_CFLAGS) $(LOCAL_CFLAGS)
+LFLAGS := $(PLATFORM_LFLAGS) $(PROJECT_LFLAGS) $(LOCAL_LFLAGS)
 
 #
 # Create List of Source Files
@@ -69,23 +71,23 @@ SRCS := $(shell find -L $(SRC_PATH) \( -name "*.cpp" -o -name "*.c" -o -name "*.
 #
 # Create List of Object Files
 #
-BASE = $(basename $(SRCS))
-OBJS = $(BASE:%=$(OBJ_PATH)/%.o)
+BASE := $(basename $(SRCS))
+OBJS := $(BASE:%=$(OBJ_PATH)/%.o)
 
 #
 # Create List of Dependency Files
 #
-DEPS = $(OBJS:.o=.d)
+DEPS := $(OBJS:.o=.d)
 
 #
 # Create List of Include Paths
 #
-INCS := $(shell find -L $(SRC_PATH) -type d -print | sed -e 's/^/-I/g' | tr '\n' ' ') $(PROJECT_INCS)
+INCS := $(shell find -L $(SRC_PATH) -type d -print | sed -e 's/^/-I/g' | tr '\n' ' ') $(PLATFORM_INCS) $(PROJECT_INCS) $(LOCAL_INCS)
 
 #
 # Create List of Libraries
 #
-LIBS = $(PROJECT_LIBS) $(PLATFORM_LIBS)
+LIBS = $(PLATFORM_LIBS) $(PROJECT_LIBS) $(LOCAL_LIBS)
 
 #
 # Phony targets
