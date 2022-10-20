@@ -16,6 +16,7 @@
 #   2022-09-23  asc Replaced @if [ -e with -f for /bin/sh compatibility.
 #   2022-10-06  asc Added LOCAL_LIBS and LOCAL_INCS.
 #   2022-10-06  asc Switched from = to := where possible (expand at assignment).
+#   2022-10-07  asc Added $(strip ...) to compact the white space in parameters.
 #
 ######################################################################
 
@@ -98,18 +99,18 @@ LIBS = $(PLATFORM_LIBS) $(PROJECT_LIBS) $(LOCAL_LIBS)
 # Default rules for compiling/assembling C and C++ files
 #
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	$(strip $(CC) $(CFLAGS) $(INCS)) -c $< -o $@
 
 %.o: %.cpp
-	$(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS) -c $< -o $@
+	$(strip $(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS)) -c $< -o $@
 
 $(OBJ_PATH)/%.o: %.c
 	@mkdir -p $(OBJ_PATH)
-	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	$(strip $(CC) $(CFLAGS) $(INCS)) -c $< -o $@
 
 $(OBJ_PATH)/%.o: %.cpp
 	@mkdir -p $(OBJ_PATH)
-	$(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS) -c $< -o $@
+	$(strip $(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS)) -c $< -o $@
 
 #
 # Rule to build all
@@ -122,16 +123,16 @@ all: $(NAME)$(EXT)
 #
 $(OBJ_PATH)/$(NAME)$(EXT): $(OBJS) $(PROJECT_DEPS)
 ifeq ($(LIBRARY_BUILD), false)
-	$(CPP) $(LFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(strip $(CPP) $(LFLAGS)) -o $@ $(OBJS) $(LIBS)
 else
     ifeq ($(LIBRARY_TYPE), static)
 	    $(AR) crv $@ $(OBJS)
     endif
 
     ifeq ($(LIBRARY_TYPE), shared)
-#	    $(CPP) $(LFLAGS) -shared -o $@ -Wl,--out-implib=$(OBJ_PATH)/$(NAME).$(STATIC_EXT) -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--whole-archive $(OBJS) -Wl,--no-whole-archive $(LIBS)
-#	    $(CPP) $(LFLAGS) -shared -o $@ -Wl,--out-implib=$(OBJ_PATH)/$(NAME).$(STATIC_EXT) $(OBJS) $(LIBS)
-	    $(CPP) $(LFLAGS) -shared -o $@ $(OBJS) $(LIBS)
+#	    $(strip $(CPP) $(LFLAGS)) -shared -o $@ -Wl,--out-implib=$(OBJ_PATH)/$(NAME).$(STATIC_EXT) -Wl,--export-all-symbols -Wl,--enable-auto-import -Wl,--whole-archive $(OBJS) -Wl,--no-whole-archive $(LIBS)
+#	    $(strip $(CPP) $(LFLAGS)) -shared -o $@ -Wl,--out-implib=$(OBJ_PATH)/$(NAME).$(STATIC_EXT) $(OBJS) $(LIBS)
+	    $(strip $(CPP) $(LFLAGS)) -shared -o $@ $(OBJS) $(LIBS)
     endif
 endif
 	@if [ -f "postbuild.sh" ]; then ./postbuild.sh $@; fi
@@ -141,11 +142,11 @@ endif
 #
 $(OBJ_PATH)/%.d: %.c
 	@mkdir -p $(OBJ_PATH)
-	$(CC) $(CFLAGS) -MM -MT $(OBJ_PATH)/$(subst .c,.o,$(notdir $^)) $(INCS) $^ > $@
+	$(strip $(CC) $(CFLAGS) $(INCS)) -MM -MT $(OBJ_PATH)/$(subst .c,.o,$(notdir $^)) $^ > $@
 
 $(OBJ_PATH)/%.d: %.cpp
 	@mkdir -p $(OBJ_PATH)
-	$(CPP) $(CFLAGS) $(CPPFLAGS) -MM -MT $(OBJ_PATH)/$(subst .cpp,.o,$(notdir $^)) $(INCS) $^ > $@
+	$(strip $(CPP) $(CFLAGS) $(CPPFLAGS) $(INCS)) -MM -MT $(OBJ_PATH)/$(subst .cpp,.o,$(notdir $^)) $^ > $@
 
 #
 # Rule for cleaning up the build objects
