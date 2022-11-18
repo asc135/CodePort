@@ -1,6 +1,6 @@
-Date:        2021-11-04
+Date:        2022-11-18
 Project:     CodePort++ Operating System Abstraction Library
-Version:     v00.48.01
+Version:     v00.49
 Maintainer:  Amardeep S. Chana
 Contact:     asc135@yahoo.com
 Website:     https://github.com/asc135/CodePort
@@ -129,3 +129,7 @@ v00.48      2014-12-03
 v00.48.01   2021-11-04
     Updated buildconf.inc to specify compiler flag -std=c++98 due to new and
     delete's exception handling. Plan to update to latest standard soon.
+
+v00.49      2022-11-18
+    Added c++17 support, AIX and Solaris platforms, cpSubProcess, several new
+    utility functions, and some refinements.
