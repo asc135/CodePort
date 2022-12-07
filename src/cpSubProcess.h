@@ -16,6 +16,7 @@
 //  2022-02-04  asc Added Cancel method.
 //  2022-03-02  asc Added StreamBufTransfer() method.
 //  2022-06-10  asc Added IsValid() accessor method.
+//  2022-12-07  asc Removed IsValid() as it is provided by the base class.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_SUBPROCESS_H
@@ -51,7 +52,6 @@ public:
     void WaitUntilDone();                                   // returns when subprocess completes
     void BufferExtract(Buffer &Buf);                        // copy out the stream buffer
     void StreamBufTransfer(StreamBuf &Dest);                // transfer out the stream buffer
-    bool IsValid() { return  m_Valid; }                     // check if command started successfully
 
 private:
     void IoThread();                                        // I/O thread function
