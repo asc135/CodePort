@@ -78,8 +78,7 @@ protected:
     {
         if (m_Valid == false)
         {
-            LogErr << MethodId << " from component: " << m_Name << ", instance: " << this
-                   << " cannot be called.  Object initialization invalid." << std::endl;
+            LogErr << MethodId << ", instance: " << this << " cannot be called.  Object initialization invalid." << std::endl;
         }
 
         return m_Valid;
