@@ -17,6 +17,7 @@
 #   2022-05-22  asc Added environment variables to inject compiler and linker options.
 #   2022-10-06  asc Added LOCAL_INCS and LOCAL_LIBS definitions from env vars.
 #   2022-10-06  asc Switched from = to := where possible (expand at assignment).
+#   2023-01-04  asc Changed CPPFLAGS to CXXFLAGS.
 #
 ###############################################################################
 
@@ -66,14 +67,14 @@ LOCAL_LIBS := ${LOCAL_LIBRARIES}
 #
 # Project Compiler and Linker Flags
 #
-PROJECT_CPPFLAGS := -std=c++17
+PROJECT_CXXFLAGS := -std=c++17
 PROJECT_CFLAGS := -Wall -Wextra -pedantic -Werror
 PROJECT_LFLAGS :=
 
 #
 # Local Compiler and Linker Flags
 #
-LOCAL_CPPFLAGS := ${LOCAL_CPP_FLAGS}
+LOCAL_CXXFLAGS := ${LOCAL_CXX_FLAGS}
 LOCAL_CFLAGS := ${LOCAL_C_FLAGS}
 LOCAL_LFLAGS := ${LOCAL_L_FLAGS}
 
