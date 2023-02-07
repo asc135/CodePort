@@ -18,6 +18,7 @@
 #   2022-10-06  asc Switched from = to := where possible (expand at assignment).
 #   2022-10-07  asc Added $(strip ...) to compact the white space in parameters.
 #   2023-01-04  asc Changed CPP and CPPFLAGS to CXX and CXXFLAGS.  Added AR.
+#   2023-02-07  asc Restructured and extended dependency variables.
 #
 ######################################################################
 
@@ -80,7 +81,12 @@ OBJS := $(BASE:%=$(OBJ_PATH)/%.o)
 #
 # Create List of Dependency Files
 #
-DEPS := $(OBJS:.o=.d)
+DEP_FILES := $(OBJS:.o=.d)
+
+#
+# Create List of Dependency Objects
+#
+DEPS := $(PLATFORM_DEPS) $(PROJECT_DEPS) $(LOCAL_DEPS)
 
 #
 # Create List of Include Paths
@@ -123,7 +129,7 @@ all: $(NAME)$(EXT)
 #
 # Rule to make target
 #
-$(OBJ_PATH)/$(NAME)$(EXT): $(OBJS) $(PROJECT_DEPS)
+$(OBJ_PATH)/$(NAME)$(EXT): $(OBJS) $(DEPS)
 ifeq ($(LIBRARY_BUILD), false)
 	$(strip $(CXX) $(LFLAGS)) -o $@ $(OBJS) $(LIBS)
 else
@@ -165,5 +171,5 @@ clean:
 # Include dependency files generated above
 #
 ifneq ($(MAKECMDGOALS),clean)
--include $(DEPS)
+-include $(DEP_FILES)
 endif

@@ -18,6 +18,7 @@
 #   2022-10-06  asc Added LOCAL_INCS and LOCAL_LIBS definitions from env vars.
 #   2022-10-06  asc Switched from = to := where possible (expand at assignment).
 #   2023-01-04  asc Changed CPPFLAGS to CXXFLAGS.
+#   2023-02-07  asc Added LOCAL_DEPS.
 #
 ###############################################################################
 
@@ -63,6 +64,7 @@ include $(CODEPORT)/platforms/$(PLATFORM)/platform.inc
 #
 LOCAL_INCS := ${LOCAL_INCLUDES}
 LOCAL_LIBS := ${LOCAL_LIBRARIES}
+LOCAL_DEPS := ${LOCAL_DEPENDENCIES}
 
 #
 # Project Compiler and Linker Flags
