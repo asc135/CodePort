@@ -18,7 +18,7 @@
 #   2022-10-06  asc Added LOCAL_INCS and LOCAL_LIBS definitions from env vars.
 #   2022-10-06  asc Switched from = to := where possible (expand at assignment).
 #   2023-01-04  asc Changed CPPFLAGS to CXXFLAGS.
-#   2023-02-07  asc Added LOCAL_DEPS.
+#   2023-02-07  asc Added local.inc for build configuration.
 #
 ###############################################################################
 
@@ -62,9 +62,9 @@ include $(CODEPORT)/platforms/$(PLATFORM)/platform.inc
 #
 # Local Build Settings
 #
-LOCAL_INCS := ${LOCAL_INCLUDES}
-LOCAL_LIBS := ${LOCAL_LIBRARIES}
-LOCAL_DEPS := ${LOCAL_DEPENDENCIES}
+ifneq ("$(wildcard ./local.inc)","")
+include local.inc
+endif
 
 #
 # Project Compiler and Linker Flags
@@ -72,13 +72,6 @@ LOCAL_DEPS := ${LOCAL_DEPENDENCIES}
 PROJECT_CXXFLAGS := -std=c++17
 PROJECT_CFLAGS := -Wall -Wextra -pedantic -Werror
 PROJECT_LFLAGS :=
-
-#
-# Local Compiler and Linker Flags
-#
-LOCAL_CXXFLAGS := ${LOCAL_CXX_FLAGS}
-LOCAL_CFLAGS := ${LOCAL_C_FLAGS}
-LOCAL_LFLAGS := ${LOCAL_L_FLAGS}
 
 #
 # Source Path
