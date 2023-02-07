@@ -16,6 +16,7 @@
 //  2013-06-14  asc Added Shutdown() method and adjusted close detect logic.
 //  2013-09-04  asc Added socket options enumeration and constructor param.
 //  2014-12-03  asc Added OnOpen() and OnClose() methods.
+//  2023-01-20  asc Replaced AF_INET with PF_INET in socket() call.
 // ----------------------------------------------------------------------------
 
 #include "cpTcp.h"
@@ -32,10 +33,10 @@ Tcp::Tcp(String const &Name, uint32_t RecvAddr, uint16_t RecvPort, int ListenQue
     // perform any platform specific network startup initialization
     m_Valid = Init();
 
-    // create a socket for sending and receiving datagrams
+    // create a socket for sending and receiving stream data
     if (m_Valid)
     {
-        m_dWrite = (desc_t)socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        m_dWrite = (desc_t)socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
         m_Valid = (m_dWrite != k_InvalidSocket);
 
