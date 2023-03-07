@@ -22,6 +22,7 @@
 //  2013-02-21  asc Added embedded class to make InvokeUserFunc() private.
 //  2013-02-06  asc Added startup options to specify run mode and exit sync.
 //  2013-04-17  asc Added accessor method to return state of exit flag.
+//  2023-03-06  asc Added ability to abort the thread.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_THREAD_H
@@ -74,6 +75,8 @@ public:
 
     // manipulators
     void PrioritySet(uint8_t Priority);                     // set execution priority
+    void Abortable(bool Enable);                            // enable or disable abortable state
+    void Abort();                                           // abort execution if thread was set to abortable
     void Resume();                                          // resume execution
     void Suspend();                                         // suspend execution
     void ExitReq();                                         // request the thread to exit
@@ -98,6 +101,7 @@ private:
     uint8_t             m_Selector;                         // application defined method selector
     bool                m_ExitSync;                         // synchronize thread exit with destructor
     bool                m_ExitFlag;                         // thread exit control flag
+    bool                m_Abortable;                        // true if thread can be forced to abort
     Thread_t            m_Thread;                           // native thread data storage
     ThreadFuncPtr_t     m_PtrFunc;                          // pointer to the user thread function or object
     void               *m_PtrContext;                       // pointer to the user thread context

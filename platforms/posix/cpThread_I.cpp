@@ -23,6 +23,7 @@
 //  2013-02-21  asc Moved Trampoline() into an embedded class to make InvokeUserFunc() private.
 //  2022-05-25  asc Added support for setting the stack size via the constructor parameter.
 //  2022-05-25  asc Added a minimum thread stack size due to AIX's default 92KB stack size.
+//  2023-03-06  asc Added ability to abort the thread.
 // ----------------------------------------------------------------------------
 
 #include "cpThread.h"
@@ -132,6 +133,27 @@ void Thread::PrioritySet(uint8_t Priority)
 {
     // not currently used in this implementation
     (void)Priority;
+}
+
+
+// enable or disable abortable state
+void Thread::Abortable(bool Enable)
+{
+    int type = Enable ? PTHREAD_CANCEL_ASYNCHRONOUS : PTHREAD_CANCEL_DEFERRED;
+    int oldtype = 0;
+    m_Abortable = Enable;
+    pthread_setcanceltype(type, &oldtype);
+}
+
+
+// abort execution if thread was set to abortable
+void Thread::Abort()
+{
+    if (m_Abortable)
+    {
+        pthread_cancel(m_Thread);
+        m_RunState = state_Error;       // prevents Thread instance destructor from getting blocked
+    }
 }
 
 }   // namespace cp

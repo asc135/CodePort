@@ -15,6 +15,7 @@
 //  2013-02-15  asc Creation.
 //  2013-02-06  asc Added startup options to specify run mode and exit sync.
 //  2013-04-17  asc Added protection from thread deleting thread object.
+//  2023-03-06  asc Added ability to abort the thread.
 // ----------------------------------------------------------------------------
 
 #include "cpMutex.h"
@@ -31,6 +32,7 @@ Thread::Thread(String const &Name, ThreadFuncPtr_t pFunction, void *pContext,
     m_Selector(Selector),
     m_ExitSync(false),
     m_ExitFlag(false),
+    m_Abortable(false),
     m_PtrFunc(pFunction),
     m_PtrContext(pContext),
     m_MtxState("Thread State Mutex"),
