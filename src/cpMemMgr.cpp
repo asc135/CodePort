@@ -15,6 +15,8 @@
 //  2010-10-10  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2012-11-28  asc Eliminated MemManager destructor due to static initializer issue.
+//  2023-03-28  asc Added mutex protection to CreatePool() so it can be used by application.
+//  2023-03-28  asc Added parameter to control block level details in StatusLog().
 // ----------------------------------------------------------------------------
 
 #include "cpMemMgr.h"
@@ -230,25 +232,26 @@ bool MemPool::MemBlockPut(MemBlock * &Mem)
 
 
 // log block usage statistics
-void MemPool::StatusLog(std::ostream &Out) const
+void MemPool::StatusLog(std::ostream &Out, bool Blocks) const
 {
-    MemBlock *pBlock = NULL;
-
     Out << "\n";
-    Out << "  Pool:  "   << std::setw(5) << m_BlockSize
+    Out << "  Pool:  "   << std::setw(8) << m_BlockSize
         << "  Inc:  "    << std::setw(5) << m_Increment
         << "  Blocks:  " << std::setw(5) << m_TotalBlocks
         << "  Inv:  "    << std::setw(5) << m_Inventory
         << "  Peak:  "   << std::setw(5) << m_PeakUsed << std::endl;
     Out << "  ----------------------------------";
-    Out << "----------------------------------" << std::endl;
+    Out << "-------------------------------------" << std::endl;
 
-    pBlock = m_BlkHead;
-
-    while (pBlock != NULL)
+    if (Blocks)
     {
-        pBlock->StatusLog(Out);
-        pBlock = pBlock->NextGet();
+        MemBlock *pBlock = m_BlkHead;
+
+        while (pBlock != NULL)
+        {
+            pBlock->StatusLog(Out);
+            pBlock = pBlock->NextGet();
+        }
     }
 }
 
@@ -492,7 +495,7 @@ bool MemManager::MemBlockPut(char * &Mem)
 
 
 // log block usage statistics
-void MemManager::StatusLog(std::ostream &Out)
+void MemManager::StatusLog(std::ostream &Out, bool Blocks)
 {
     MemPool *pPool;
 
@@ -509,7 +512,7 @@ void MemManager::StatusLog(std::ostream &Out)
 
         while (pPool != NULL)
         {
-            pPool->StatusLog(Out);
+            pPool->StatusLog(Out, Blocks);
             pPool = pPool->NextGet();
         }
 
@@ -522,6 +525,9 @@ void MemManager::StatusLog(std::ostream &Out)
 bool MemManager::CreatePool(size_t BlockSize, uint32_t Initial, uint32_t Increment)
 {
     bool rv = true;
+
+    m_Mutex.Lock();
+
     MemPool *pPool = m_PoolHead;
     MemPool *pPrevMatch = NULL;
 
@@ -579,6 +585,8 @@ bool MemManager::CreatePool(size_t BlockSize, uint32_t Initial, uint32_t Increme
             pPrevMatch->NextSet(pPool);
         }
     }
+
+    m_Mutex.Unlock();
 
     return rv;
 }

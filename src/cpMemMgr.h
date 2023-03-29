@@ -14,6 +14,7 @@
 //  History:
 //  2010-10-10  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
+//  2023-03-28  asc Added parameter to control block level details in StatusLog().
 // ----------------------------------------------------------------------------
 
 #ifndef  CP_MEMMGR_H
@@ -150,7 +151,7 @@ public:
         return m_BlockSize;
     }
 
-    void StatusLog(std::ostream &Out) const;                // log block usage statistics
+    void StatusLog(std::ostream &Out, bool Blocks) const;   // log block usage statistics
 
     // embedded list accessors
     void NextSet(MemPool *Pool)                             // put pointer to next pool in the list
@@ -188,7 +189,7 @@ private:
 //
 //                  In the case of a block size that is larger than any managed by the existing pools, a
 //                  standard heap allocation will result.  The return of such a block will result in its
-//                  deallocatin back to the heap.
+//                  deallocation back to the heap.
 class MemManager
 {
 public:
@@ -200,7 +201,7 @@ public:
     bool MemBlockPut(MemBlock * &Mem);                      // return a block
     bool MemBlockPut(char * &Mem);                          // return a block using its buffer pointer
 
-    void StatusLog(std::ostream &Out);                      // get block usage statistics
+    void StatusLog(std::ostream &Out, bool Blocks = false); // get block usage statistics
 
     // manipulators
     bool CreatePool(size_t BlockSize,
