@@ -26,6 +26,7 @@
 //  2022-06-10  asc Added BufferToLines() function.
 //  2022-07-08  asc Modified Tokenize() to not eat spaces.
 //  2022-09-09  asc Added CheckAlphaNumeric() function.
+//  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -260,17 +261,31 @@ String &Rchomp(String &Str, size_t Count)
 }
 
 
-// converts string to integer
+// converts string to long integer
 int32_t StrToInt(String const &Str)
 {
     return strtol(Str.c_str(), NULL, 10);
 }
 
 
-// converts string to unsigned integer
+// converts string to unsigned long integer
 uint32_t StrToUint(String const &Str)
 {
     return strtoul(Str.c_str(), NULL, 10);
+}
+
+
+// converts string to long long integer
+int64_t StrToInt64(String const &Str)
+{
+    return strtoll(Str.c_str(), NULL, 10);
+}
+
+
+// converts string to unsigned long long integer
+uint64_t StrToUint64(String const &Str)
+{
+    return strtoull(Str.c_str(), NULL, 10);
 }
 
 

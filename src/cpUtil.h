@@ -28,6 +28,7 @@
 //  2022-06-09  asc Added CpuTime64() function.
 //  2022-06-10  asc Added RunProgramGetOutput(), and BufferToLines() functions.
 //  2022-09-09  asc Added CheckAlphaNumeric() function.
+//  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -167,11 +168,17 @@ String &Lchomp(String &Str, size_t Count = 1);
 // chomps characters from the end of a string
 String &Rchomp(String &Str, size_t Count = 1);
 
-// converts string to integer
+// converts string to long integer
 int32_t StrToInt(String const &Str);
 
-// converts string to unsigned integer
+// converts string to unsigned long integer
 uint32_t StrToUint(String const &Str);
+
+// converts string to long long integer
+int64_t StrToInt64(String const &Str);
+
+// converts string to unsigned long long integer
+uint64_t StrToUint64(String const &Str);
 
 // converts string to float
 double StrToFloat(String const &Str);
