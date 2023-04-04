@@ -15,6 +15,7 @@
 //  2012-12-10  asc Creation.
 //  2013-04-03  asc Added reference counted winsock init/cleanup.
 //  2013-11-15  asc Added cstdlib and csignal headers.
+//  2023-04-04  asc Added desc_t definition.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -60,6 +61,9 @@ namespace cp
 extern std::ostream &LogMsg;
 extern std::ostream &LogErr;
 extern uint32_t k_IoPendingInterval;
+
+// file descriptor for this platform
+typedef HANDLE desc_t;
 
 uint32_t ThreadId_Impl();
 void PrintGetLastError(DWORD LastError);

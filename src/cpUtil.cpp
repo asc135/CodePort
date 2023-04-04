@@ -27,6 +27,8 @@
 //  2022-07-08  asc Modified Tokenize() to not eat spaces.
 //  2022-09-09  asc Added CheckAlphaNumeric() function.
 //  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
+//  2023-04-04  asc Added UpperCase() and LowerCase() functions.
+//  2023-04-04  asc Added CheckPrefix(), RemovePrefix(), ReplaceSubString(), GetPathComponents().
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -990,6 +992,112 @@ String LowerCase(String const &Input)
     }
 
     return rv;
+}
+
+
+// check if a string has a prefix
+bool CheckPrefix(String const &Input, String const &Prefix)
+{
+    return (Input.substr(0, Prefix.size()) == Prefix);
+}
+
+
+// remove a prefix from a string if it is present
+String RemovePrefix(String const &Input, String const &Prefix)
+{
+    String result = Input;
+
+    if (Input.length() >= Prefix.length())
+    {
+        // locate the prefix
+        size_t pos = Input.find(Prefix);
+
+        // remove the prefix
+        if (pos == 0)
+        {
+            result = Input.substr(Prefix.length());
+        }
+    }
+
+    return result;
+}
+
+
+// replace all occurrences of a substring
+String ReplaceSubString(String const &Input, String const &OrigSub, String const &NewSub)
+{
+    size_t pos;
+    bool done = false;
+    String rv = Input;
+
+    // protect from recursion...NewSub must not contain OrigSub
+    if (NewSub.find(OrigSub) != String::npos)
+    {
+        return rv;
+    }
+
+    while (!done)
+    {
+        pos = rv.find(OrigSub);
+
+        if (pos != String::npos)
+        {
+            rv.replace(pos, OrigSub.length(), NewSub);
+        }
+        else
+        {
+            done = true;
+        }
+    }
+
+    return rv;
+}
+
+
+// get components of a path
+void GetPathComponents(String const &Path, String &Directory, String &Filename, String &Extension)
+{
+    size_t loc;
+
+    Directory.clear();
+    Filename.clear();
+    Extension.clear();
+
+    if (Path == "." || Path == ".." || Path == "~")
+    {
+        Directory = Path;
+    }
+    else
+    {
+        loc = Path.find_last_of(PathSep());
+
+        if (loc == String::npos)
+        {
+            Filename = Path;
+        }
+        else
+        {
+            Directory = Path.substr(0, loc+1);
+
+            if ((loc+1) < Path.length())
+            {
+                Filename = Path.substr(loc+1);
+            }
+        }
+
+        loc = Filename.find_last_of('.');
+
+        if ((loc != 0) && (loc != String::npos))
+        {
+            String fn = Filename;
+            Filename = fn.substr(0, loc);
+
+            if ((loc+1) < fn.length())
+            {
+                Extension = fn.substr(loc+1);
+            }
+        }
+    }
 }
 
 }   // namespace cp

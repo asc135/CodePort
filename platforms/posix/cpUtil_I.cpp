@@ -24,6 +24,7 @@
 //  2022-05-22  asc Added HostName() and DomainName() functions.
 //  2022-06-09  asc Added CpuTime64() function.
 //  2022-06-10  asc Added RunProgramGetOutput() function.
+//  2023-04-04  asc Added file size, attribute, type, and ipv6 functions.
 // ----------------------------------------------------------------------------
 
 #include <arpa/inet.h>
@@ -126,7 +127,7 @@ bool DirCreate(String const &PathName)
 
 
 // start a new process
-uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, StringVec_t const &EnvVars)
+uint32_t StartProcess(String const &FilePath, StringVec_t const &Args, StringVec_t const &EnvVars)
 {
     uint32_t procId = 0;
     CStringVec_t arg;
@@ -163,7 +164,7 @@ uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, Strin
 
     if (pid < 0)
     {
-        cp::LogErr << "cp::StartProcess(): Failed to fork() process: " << FilePath << std::endl;
+        LogErr << "StartProcess(): Failed to fork() process: " << FilePath << std::endl;
     }
     else
     {
@@ -172,7 +173,7 @@ uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, Strin
             // the child process
             if (execve(FilePath.c_str(), (char * const *)arg.data(), (char * const *)env.data()) < 0)
             {
-                cp::LogErr << "cp::StartProcess(): Failed to execve() process: " << FilePath << std::endl;
+                LogErr << "StartProcess(): Failed to execve() process: " << FilePath << std::endl;
                 exit(EXIT_FAILURE);
             }
         }
@@ -188,14 +189,14 @@ uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, Strin
 
 
 // run a program and get its output
-bool RunProgramGetOutput(cp::String const &Command, StringVec_t &Output)
+bool RunProgramGetOutput(String const &Command, StringVec_t &Output)
 {
-    cp::SubProcess proc(Command, k_FlowOut);
+    SubProcess proc(Command, k_FlowOut);
     bool rv = proc.IsValid();
 
     if (rv)
     {
-        cp::Buffer buf;
+        Buffer buf;
         proc.WaitUntilDone();
         proc.BufferExtract(buf);
 
@@ -269,7 +270,7 @@ uint64_t Time64()
     }
     else
     {
-        LogErr << "cp::Time64(): gettimeofday() returned error!" << std::endl;
+        LogErr << "Time64(): gettimeofday() returned error!" << std::endl;
     }
 
     return ms;
@@ -299,7 +300,7 @@ bool Sleep(uint32_t Delay)
     tv.tv_sec = Delay;
     tv.tv_nsec = 0;
 
-    return cp::NativeSleep(tv);
+    return NativeSleep(tv);
 }
 
 
@@ -311,7 +312,7 @@ bool MilliSleep(uint32_t Delay)
     tv.tv_sec = Delay / 1000;
     tv.tv_nsec = (Delay % 1000) * 1000000;
 
-    return cp::NativeSleep(tv);
+    return NativeSleep(tv);
 }
 
 
@@ -323,7 +324,7 @@ bool MicroSleep(uint32_t Delay)
     tv.tv_sec = Delay / 1000000;
     tv.tv_nsec = (Delay % 1000000) * 1000;
 
-    return cp::NativeSleep(tv);
+    return NativeSleep(tv);
 }
 
 
@@ -335,7 +336,7 @@ bool NanoSleep(uint32_t Delay)
     tv.tv_sec = Delay / 1000000000;
     tv.tv_nsec = (Delay % 1000000000);
 
-    return cp::NativeSleep(tv);
+    return NativeSleep(tv);
 }
 
 
@@ -345,8 +346,22 @@ String Ipv4ToStr(uint32_t Addr)
     struct in_addr addr_in;
     char ipAddr[INET_ADDRSTRLEN + 1];
 
+    memset(ipAddr, 0, sizeof(ipAddr));
     addr_in.s_addr = htonl(Addr);
     inet_ntop(AF_INET, &addr_in, ipAddr, sizeof(ipAddr));
+
+    return ipAddr;
+}
+
+
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(void *pAddr)
+{
+    struct in_addr *pAddr_in = (struct in_addr *)pAddr;
+    char ipAddr[INET_ADDRSTRLEN + 1];
+
+    memset(ipAddr, 0, sizeof(ipAddr));
+    inet_ntop(AF_INET, pAddr_in, ipAddr, sizeof(ipAddr));
 
     return ipAddr;
 }
@@ -400,6 +415,103 @@ String &DomainName(String &Name)
     }
 
     return Name;
+}
+
+
+// determine if a path is a file or a directory
+bool GetPathType(String const &Path, bool &IsFile, bool &IsDir)
+{
+    struct stat fs;
+    bool rv = (stat(Path.c_str(), &fs) == 0);
+
+    //    S_IFMT     0170000   bit mask for the file type bit field
+    //
+    //    S_IFSOCK   0140000   socket
+    //    S_IFLNK    0120000   symbolic link
+    //    S_IFREG    0100000   regular file
+    //    S_IFBLK    0060000   block device
+    //    S_IFDIR    0040000   directory
+    //    S_IFCHR    0020000   character device
+    //    S_IFIFO    0010000   FIFO
+
+    if (rv)
+    {
+        IsFile = ((fs.st_mode & S_IFMT) == S_IFREG);
+        IsDir = ((fs.st_mode & S_IFMT) == S_IFDIR);
+    }
+
+    return rv;
+}
+
+
+// get file size
+size_t GetFileSize(String const &Path)
+{
+    struct stat fs;
+    size_t size = 0;
+
+    if (stat(Path.c_str(), &fs) == 0)
+    {
+        size = fs.st_size;
+    }
+
+    return size;
+}
+
+
+// get file size
+size_t GetFileSize(desc_t Descriptor)
+{
+    struct stat fs;
+    size_t size = 0;
+
+    if (fstat(Descriptor, &fs) == 0)
+    {
+        size = fs.st_size;
+    }
+
+    return size;
+}
+
+
+// get file attributes
+uint32_t GetFileAttr(String const &Path)
+{
+    struct stat fs;
+    uint32_t mode = 0;
+
+    if (stat(Path.c_str(), &fs) == 0)
+    {
+        mode = fs.st_mode;
+    }
+
+    return mode;
+}
+
+
+// get file attributes
+uint32_t GetFileAttr(desc_t Descriptor)
+{
+    struct stat fs;
+    uint32_t mode = 0;
+
+    if (fstat(Descriptor, &fs) == 0)
+    {
+        mode = fs.st_mode;
+    }
+
+    return mode;
+}
+
+
+// convert IPv6 address to string
+String Ipv6ToStr(void *pAddress)
+{
+    char ipAddr[INET6_ADDRSTRLEN + 1];
+
+    memset(ipAddr, 0, sizeof(ipAddr));
+    inet_ntop(AF_INET6, pAddress, ipAddr, sizeof(ipAddr));
+    return ipAddr;
 }
 
 }   // namespace cp

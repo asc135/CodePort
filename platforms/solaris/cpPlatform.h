@@ -17,6 +17,7 @@
 //  2013-11-15  asc Added cstdlib and csignal headers.
 //  2021-12-16  asc Added ThreadYield_Impl().
 //  2022-06-07  asc Added prototype for getdomainname() which is undeclared in Solaris.
+//  2023-04-04  asc Added desc_t definition.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -69,6 +70,9 @@ namespace cp
 
 extern std::ostream &LogMsg;
 extern std::ostream &LogErr;
+
+// file descriptor for this platform
+typedef int desc_t;
 
 uint32_t ThreadId_Impl();
 uint32_t ThreadYield_Impl();

@@ -18,6 +18,7 @@
 //  2021-12-16  asc Added ThreadYield_Impl().
 //  2022-04-07  asc Added vasprintf.h include.
 //  2022-05-23  asc Added netdb.h include.
+//  2023-04-04  asc Added desc_t definition.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -62,6 +63,9 @@ namespace cp
 
 extern std::ostream &LogMsg;
 extern std::ostream &LogErr;
+
+// file descriptor for this platform
+typedef int desc_t;
 
 uint32_t ThreadId_Impl();
 uint32_t ThreadYield_Impl();

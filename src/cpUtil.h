@@ -30,6 +30,7 @@
 //  2022-09-09  asc Added CheckAlphaNumeric() function.
 //  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
 //  2023-04-03  asc Added UpperCase() and LowerCase() functions.
+//  2023-04-04  asc Added several more functions and reorganized into common and platform.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -86,62 +87,52 @@ public:
 
 // ----------------------------------------------------------------------------
 
-// get the platform path separator
-String const PathSep();
+// ASCII standard control codes
+enum AsciiControlCodes
+{
+    CHAR_NUL  = 0x00,
+    CHAR_SOH  = 0x01,
+    CHAR_STX  = 0x02,
+    CHAR_ETX  = 0x03,
+    CHAR_EOT  = 0x04,
+    CHAR_ENQ  = 0x05,
+    CHAR_ACK  = 0x06,
+    CHAR_BEL  = 0x07,
+    CHAR_BS   = 0x08,
+    CHAR_HTAB = 0x09,
+    CHAR_LF   = 0x0a,
+    CHAR_VTAB = 0x0b,
+    CHAR_FF   = 0x0c,
+    CHAR_CR   = 0x0d,
+    CHAR_SO   = 0x0e,
+    CHAR_SI   = 0x0f,
+    CHAR_DLE  = 0x10,
+    CHAR_DC1  = 0x11,
+    CHAR_XON  = 0x11,
+    CHAR_DC2  = 0x12,
+    CHAR_DC3  = 0x13,
+    CHAR_XOFF = 0x13,
+    CHAR_DC4  = 0x14,
+    CHAR_NAK  = 0x15,
+    CHAR_SYN  = 0x16,
+    CHAR_ETB  = 0x17,
+    CHAR_CAN  = 0x18,
+    CHAR_EM   = 0x19,
+    CHAR_SUB  = 0x1a,
+    CHAR_ESC  = 0x1b,
+    CHAR_FS   = 0x1c,
+    CHAR_GS   = 0x1d,
+    CHAR_RS   = 0x1e,
+    CHAR_US   = 0x1f,
+    CHAR_DEL  = 0x7f
+};
 
-// get the current temp directory path
-String const TempDir();
-
-// test if a path exists
-bool PathExists(String const &PathName);
-
-// create a directory
-bool DirCreate(String const &PathName);
+// ----------------------------------------------------------------------------
+// platform independent (common) functions
+// ----------------------------------------------------------------------------
 
 // create a path including intermediate directories
 bool PathCreate(String const &PathName);
-
-// start a new process
-uint32_t StartProcess(cp::String const &FilePath, StringVec_t const &Args, StringVec_t const &EnvVars);
-
-// run a program and get its output
-bool RunProgramGetOutput(cp::String const &Command, StringVec_t &Output);
-
-// get current task identifier
-uint32_t TaskId();
-
-// get current thread identifier
-uint32_t ThreadId();
-
-// relinquish current thread's execution
-bool ThreadYield();
-
-// enter critical section
-bool CriticalEnter();
-
-// exit critical section
-bool CriticalExit();
-
-// return time in seconds (unix epoch)
-uint32_t Time32();
-
-// return time in milliseconds (unix epoch)
-uint64_t Time64();
-
-// return process CPU time in milliseconds
-uint64_t CpuTime64();
-
-// suspend execution for second intervals
-bool Sleep(uint32_t Delay);
-
-// suspend execution for millisecond intervals
-bool MilliSleep(uint32_t Delay);
-
-// suspend execution for microsecond intervals
-bool MicroSleep(uint32_t Delay);
-
-// suspend execution for nanosecond intervals
-bool NanoSleep(uint32_t Delay);
 
 // dump a block of data to a stream in Hex ASCII format
 bool HexDump(std::ostream &Out, Buffer const &Buf, size_t LineLen = 16);
@@ -254,12 +245,6 @@ uint16_t NtoHs(uint16_t Val);
 // network to host long
 uint32_t NtoHl(uint32_t Val);
 
-// convert a numeric IPv4 address to a string
-String Ipv4ToStr(uint32_t Addr);
-
-// convert a string to a numeric IPv4 address
-uint32_t StrToIpv4(String Addr);
-
 // read an unsigned shortword big endian
 uint16_t ReadUint16B(void const *pBuf) ;
 
@@ -314,12 +299,6 @@ size_t ReadFile(String const &Path, Buffer &FileData);
 // write the contents of a buffer into a file
 size_t WriteFile(String const &Path, Buffer &FileData);
 
-// obtain the system's host name
-String &HostName(String &Name);
-
-// obtain the system's domain namae
-String &DomainName(String &Name);
-
 // check if a string is alphanumeric
 bool CheckAlphaNumeric(String const &Input);
 
@@ -329,45 +308,108 @@ String UpperCase(String const &Input);
 // convert a string to lower case
 String LowerCase(String const &Input);
 
-// ASCII standard control codes
-enum AsciiControlCodes
-{
-    CHAR_NUL  = 0x00,
-    CHAR_SOH  = 0x01,
-    CHAR_STX  = 0x02,
-    CHAR_ETX  = 0x03,
-    CHAR_EOT  = 0x04,
-    CHAR_ENQ  = 0x05,
-    CHAR_ACK  = 0x06,
-    CHAR_BEL  = 0x07,
-    CHAR_BS   = 0x08,
-    CHAR_HTAB = 0x09,
-    CHAR_LF   = 0x0a,
-    CHAR_VTAB = 0x0b,
-    CHAR_FF   = 0x0c,
-    CHAR_CR   = 0x0d,
-    CHAR_SO   = 0x0e,
-    CHAR_SI   = 0x0f,
-    CHAR_DLE  = 0x10,
-    CHAR_DC1  = 0x11,
-    CHAR_XON  = 0x11,
-    CHAR_DC2  = 0x12,
-    CHAR_DC3  = 0x13,
-    CHAR_XOFF = 0x13,
-    CHAR_DC4  = 0x14,
-    CHAR_NAK  = 0x15,
-    CHAR_SYN  = 0x16,
-    CHAR_ETB  = 0x17,
-    CHAR_CAN  = 0x18,
-    CHAR_EM   = 0x19,
-    CHAR_SUB  = 0x1a,
-    CHAR_ESC  = 0x1b,
-    CHAR_FS   = 0x1c,
-    CHAR_GS   = 0x1d,
-    CHAR_RS   = 0x1e,
-    CHAR_US   = 0x1f,
-    CHAR_DEL  = 0x7f
-};
+// check if a string has a prefix
+bool CheckPrefix(String const &Input, String const &Prefix);
+
+// remove a prefix from a string if it is present
+String RemovePrefix(String const &Input, String const &Prefix);
+
+// replace all occurrences of a substring
+String ReplaceSubString(String const &Input, String const &OrigSub, String const &NewSub);
+
+// get components of a path
+void GetPathComponents(String const &Path, String &Directory, String &Filename, String &Extension);
+
+// ----------------------------------------------------------------------------
+// platform dependent functions
+// ----------------------------------------------------------------------------
+
+// get the platform path separator
+String const PathSep();
+
+// get the current temp directory path
+String const TempDir();
+
+// test if a path exists
+bool PathExists(String const &PathName);
+
+// create a directory
+bool DirCreate(String const &PathName);
+
+// start a new process
+uint32_t StartProcess(String const &FilePath, StringVec_t const &Args, StringVec_t const &EnvVars);
+
+// run a program and get its output
+bool RunProgramGetOutput(String const &Command, StringVec_t &Output);
+
+// get current task identifier
+uint32_t TaskId();
+
+// get current thread identifier
+uint32_t ThreadId();
+
+// relinquish current thread's execution
+bool ThreadYield();
+
+// enter critical section
+bool CriticalEnter();
+
+// exit critical section
+bool CriticalExit();
+
+// return time in seconds (unix epoch)
+uint32_t Time32();
+
+// return time in milliseconds (unix epoch)
+uint64_t Time64();
+
+// return process CPU time in milliseconds
+uint64_t CpuTime64();
+
+// suspend execution for second intervals
+bool Sleep(uint32_t Delay);
+
+// suspend execution for millisecond intervals
+bool MilliSleep(uint32_t Delay);
+
+// suspend execution for microsecond intervals
+bool MicroSleep(uint32_t Delay);
+
+// suspend execution for nanosecond intervals
+bool NanoSleep(uint32_t Delay);
+
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(uint32_t Addr);
+
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(void *pAddr);
+
+// convert a string to a numeric IPv4 address
+uint32_t StrToIpv4(String Addr);
+
+// obtain the system's host name
+String &HostName(String &Name);
+
+// obtain the system's domain namae
+String &DomainName(String &Name);
+
+// determine if a path is a file or a directory
+bool GetPathType(String const &Path, bool &IsFile, bool &IsDir);
+
+// get file size
+size_t GetFileSize(String const &Path);
+
+// get file size
+size_t GetFileSize(desc_t Descriptor);
+
+// get file attributes
+uint32_t GetFileAttr(String const &Path);
+
+// get file attributes
+uint32_t GetFileAttr(desc_t Descriptor);
+
+// convert IPv6 address to string
+String Ipv6ToStr(void *pAddress);
 
 }   // namespace cp
 

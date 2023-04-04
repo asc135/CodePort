@@ -15,6 +15,7 @@
 //  2010-10-10  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2013-11-15  asc Added cstdlib and csignal headers.
+//  2023-04-04  asc Added desc_t definition.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_PLATFORM_H
@@ -57,6 +58,9 @@ namespace cp
 
 extern std::ostream &LogMsg;
 extern std::ostream &LogErr;
+
+// file descriptor for this platform
+typedef int desc_t;
 
 uint32_t ThreadId_Impl();
 

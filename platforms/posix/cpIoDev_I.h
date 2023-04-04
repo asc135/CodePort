@@ -14,6 +14,7 @@
 //  History:
 //  2011-06-30  asc Creation.
 //  2012-08-10  asc Moved identifiers to cp namespace.
+//  2023-04-04  asc Moved desc_t typedef to cpPlatform.h.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_IODEV_I_H
@@ -21,8 +22,6 @@
 
 namespace cp
 {
-
-typedef int desc_t;
 
 }   // namespace cp
 
