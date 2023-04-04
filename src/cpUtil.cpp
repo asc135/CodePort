@@ -964,4 +964,32 @@ bool CheckAlphaNumeric(String const &Input)
     return rv;
 }
 
+
+// convert a string to upper case
+String UpperCase(String const &Input)
+{
+    String rv = Input;
+
+    for (auto c : rv)
+    {
+        c = toupper(c);
+    }
+
+    return rv;
+}
+
+
+// convert a string to lower case
+String LowerCase(String const &Input)
+{
+    String rv = Input;
+
+    for (auto c : rv)
+    {
+        c = tolower(c);
+    }
+
+    return rv;
+}
+
 }   // namespace cp

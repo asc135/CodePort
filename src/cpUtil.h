@@ -29,6 +29,7 @@
 //  2022-06-10  asc Added RunProgramGetOutput(), and BufferToLines() functions.
 //  2022-09-09  asc Added CheckAlphaNumeric() function.
 //  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
+//  2023-04-03  asc Added UpperCase() and LowerCase() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -321,6 +322,12 @@ String &DomainName(String &Name);
 
 // check if a string is alphanumeric
 bool CheckAlphaNumeric(String const &Input);
+
+// convert a string to upper case
+String UpperCase(String const &Input);
+
+// convert a string to lower case
+String LowerCase(String const &Input);
 
 // ASCII standard control codes
 enum AsciiControlCodes
