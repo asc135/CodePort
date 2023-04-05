@@ -378,15 +378,6 @@ bool MicroSleep(uint32_t Delay);
 // suspend execution for nanosecond intervals
 bool NanoSleep(uint32_t Delay);
 
-// convert a numeric IPv4 address to a string
-String Ipv4ToStr(uint32_t Addr);
-
-// convert a numeric IPv4 address to a string
-String Ipv4ToStr(void *pAddr);
-
-// convert a string to a numeric IPv4 address
-uint32_t StrToIpv4(String Addr);
-
 // obtain the system's host name
 String &HostName(String &Name);
 
@@ -408,8 +399,20 @@ uint32_t GetFileAttr(String const &Path);
 // get file attributes
 uint32_t GetFileAttr(desc_t Descriptor);
 
-// convert IPv6 address to string
-String Ipv6ToStr(void *pAddress);
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(uint32_t Addr);
+
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(void const *pAddr);
+
+// convert a string to a numeric IPv4 address
+uint32_t StrToIpv4(String const &Addr);
+
+// convert a numeric IPv6 address to string
+String Ipv6ToStr(void const *pAddress);
+
+// convert a string to a numeric IPv6 address
+Buffer StrToIpv6(String const &Addr);
 
 }   // namespace cp
 

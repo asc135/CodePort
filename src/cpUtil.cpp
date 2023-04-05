@@ -972,7 +972,7 @@ String UpperCase(String const &Input)
 {
     String rv = Input;
 
-    for (auto c : rv)
+    for (auto &c : rv)
     {
         c = toupper(c);
     }
@@ -986,7 +986,7 @@ String LowerCase(String const &Input)
 {
     String rv = Input;
 
-    for (auto c : rv)
+    for (auto &c : rv)
     {
         c = tolower(c);
     }
@@ -1098,6 +1098,7 @@ void GetPathComponents(String const &Path, String &Directory, String &Filename, 
             }
         }
     }
+    // LogMsg << "Path: " << Path << ", Dir: '" << Directory << "', Fn: '" << Filename << "', Ext: '" << Extension << "'" << std::endl;
 }
 
 }   // namespace cp

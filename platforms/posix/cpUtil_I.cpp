@@ -340,48 +340,6 @@ bool NanoSleep(uint32_t Delay)
 }
 
 
-// convert a numeric IPv4 address to a string
-String Ipv4ToStr(uint32_t Addr)
-{
-    struct in_addr addr_in;
-    char ipAddr[INET_ADDRSTRLEN + 1];
-
-    memset(ipAddr, 0, sizeof(ipAddr));
-    addr_in.s_addr = htonl(Addr);
-    inet_ntop(AF_INET, &addr_in, ipAddr, sizeof(ipAddr));
-
-    return ipAddr;
-}
-
-
-// convert a numeric IPv4 address to a string
-String Ipv4ToStr(void *pAddr)
-{
-    struct in_addr *pAddr_in = (struct in_addr *)pAddr;
-    char ipAddr[INET_ADDRSTRLEN + 1];
-
-    memset(ipAddr, 0, sizeof(ipAddr));
-    inet_ntop(AF_INET, pAddr_in, ipAddr, sizeof(ipAddr));
-
-    return ipAddr;
-}
-
-
-// convert a string to a numeric IPv4 address
-uint32_t StrToIpv4(String Addr)
-{
-    uint32_t rv = 0;
-    struct in_addr addr;
-
-    if (inet_pton(AF_INET, Addr.c_str(), &addr) > 0)
-    {
-        rv = ntohl(addr.s_addr);
-    }
-
-    return rv;
-}
-
-
 // obtain the system's host name
 String &HostName(String &Name)
 {
@@ -438,6 +396,11 @@ bool GetPathType(String const &Path, bool &IsFile, bool &IsDir)
     {
         IsFile = ((fs.st_mode & S_IFMT) == S_IFREG);
         IsDir = ((fs.st_mode & S_IFMT) == S_IFDIR);
+    }
+    else
+    {
+        IsFile = false;
+        IsDir = false;
     }
 
     return rv;
@@ -504,14 +467,71 @@ uint32_t GetFileAttr(desc_t Descriptor)
 }
 
 
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(uint32_t Addr)
+{
+    struct in_addr addr_in;
+    char ipAddr[INET_ADDRSTRLEN + 1];
+
+    memset(ipAddr, 0, sizeof(ipAddr));
+    addr_in.s_addr = htonl(Addr);
+    inet_ntop(AF_INET, &addr_in, ipAddr, sizeof(ipAddr));
+
+    return ipAddr;
+}
+
+
+// convert a numeric IPv4 address to a string
+String Ipv4ToStr(void const *pAddr)
+{
+    struct in_addr const *pAddr_in = (struct in_addr const *)pAddr;
+    char ipAddr[INET_ADDRSTRLEN + 1];
+
+    memset(ipAddr, 0, sizeof(ipAddr));
+    inet_ntop(AF_INET, pAddr_in, ipAddr, sizeof(ipAddr));
+
+    return ipAddr;
+}
+
+
+// convert a string to a numeric IPv4 address
+uint32_t StrToIpv4(String const &Addr)
+{
+    uint32_t rv = 0;
+    struct in_addr addr;
+
+    if (inet_pton(AF_INET, Addr.c_str(), &addr) > 0)
+    {
+        rv = ntohl(addr.s_addr);
+    }
+
+    return rv;
+}
+
+
 // convert IPv6 address to string
-String Ipv6ToStr(void *pAddress)
+String Ipv6ToStr(void const *pAddr)
 {
     char ipAddr[INET6_ADDRSTRLEN + 1];
 
     memset(ipAddr, 0, sizeof(ipAddr));
-    inet_ntop(AF_INET6, pAddress, ipAddr, sizeof(ipAddr));
+    inet_ntop(AF_INET6, pAddr, ipAddr, sizeof(ipAddr));
     return ipAddr;
+}
+
+
+// convert a string to a numeric IPv6 address
+Buffer StrToIpv6(String const &Addr)
+{
+    struct in6_addr addr;
+    Buffer buf;
+
+    if (inet_pton(AF_INET6, Addr.c_str(), &addr) > 0)
+    {
+        buf.CopyIn((uint8_t *)&addr.s6_addr, sizeof(in6_addr));
+    }
+
+    return buf;
 }
 
 }   // namespace cp
