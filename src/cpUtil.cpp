@@ -29,6 +29,7 @@
 //  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
 //  2023-04-04  asc Added UpperCase() and LowerCase() functions.
 //  2023-04-04  asc Added CheckPrefix(), RemovePrefix(), ReplaceSubString(), GetPathComponents().
+//  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -998,14 +999,14 @@ String LowerCase(String const &Input)
 // check if a string has a prefix
 bool CheckPrefix(String const &Input, String const &Prefix)
 {
-    return (Input.substr(0, Prefix.size()) == Prefix);
+    return (Input.substr(0, Prefix.length()) == Prefix);
 }
 
 
 // remove a prefix from a string if it is present
 String RemovePrefix(String const &Input, String const &Prefix)
 {
-    String result = Input;
+    String result;
 
     if (Input.length() >= Prefix.length())
     {
@@ -1017,6 +1018,60 @@ String RemovePrefix(String const &Input, String const &Prefix)
         {
             result = Input.substr(Prefix.length());
         }
+        else
+        {
+            result = Input;
+        }
+    }
+    else
+    {
+        result = Input;
+    }
+
+    return result;
+}
+
+
+// check if a string has a suffix
+bool CheckSuffix(String const &Input, String const &Suffix)
+{
+    size_t baseLen = 0;
+
+    if (Input.length() >= Suffix.length())
+    {
+        baseLen = Input.length() - Suffix.length();
+    }
+
+    return (Input.substr(baseLen, Suffix.length()) == Suffix);
+}
+
+
+// remove a suffix from a string if it is present
+String RemoveSuffix(String const &Input, String const &Suffix)
+{
+    String result;
+    size_t baseLen = 0;
+
+    if (Input.length() >= Suffix.length())
+    {
+        baseLen = Input.length() - Suffix.length();
+
+        // locate the suffix
+        size_t pos = Input.rfind(Suffix);
+
+        // remove the suffix
+        if (pos == baseLen)
+        {
+            result = Input.substr(0, pos);
+        }
+        else
+        {
+            result = Input;
+        }
+    }
+    else
+    {
+        result = Input;
     }
 
     return result;

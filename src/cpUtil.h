@@ -31,6 +31,7 @@
 //  2023-03-29  asc Added StrToInt64() and StrToUint64() functions.
 //  2023-04-03  asc Added UpperCase() and LowerCase() functions.
 //  2023-04-04  asc Added several more functions and reorganized into common and platform.
+//  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -313,6 +314,12 @@ bool CheckPrefix(String const &Input, String const &Prefix);
 
 // remove a prefix from a string if it is present
 String RemovePrefix(String const &Input, String const &Prefix);
+
+// check if a string has a suffix
+bool CheckSuffix(String const &Input, String const &Suffix);
+
+// remove a suffix from a string if it is present
+String RemoveSuffix(String const &Input, String const &Suffix);
 
 // replace all occurrences of a substring
 String ReplaceSubString(String const &Input, String const &OrigSub, String const &NewSub);
