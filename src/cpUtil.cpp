@@ -30,6 +30,7 @@
 //  2023-04-04  asc Added UpperCase() and LowerCase() functions.
 //  2023-04-04  asc Added CheckPrefix(), RemovePrefix(), ReplaceSubString(), GetPathComponents().
 //  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
+//  2023-05-02  asc Added NormalizePath().
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -1154,6 +1155,46 @@ void GetPathComponents(String const &Path, String &Directory, String &Filename, 
         }
     }
     // LogMsg << "Path: " << Path << ", Dir: '" << Directory << "', Fn: '" << Filename << "', Ext: '" << Extension << "'" << std::endl;
+}
+
+
+// dereference relative components in a path
+String NormalizePath(String const &Path)
+{
+    String result;
+    String pathSep = PathSep();
+    StringVec_t elements;
+    std::list<String> elementList;
+
+    Tokenize(Path, pathSep, elements);
+
+    for (auto &e : elements)
+    {
+        if (e == "." || e.empty())
+        {
+            continue;
+        }
+        else if (e == "..")
+        {
+            if (!elementList.empty())
+            {
+                elementList.pop_back();
+            }
+        }
+        else
+        {
+            elementList.push_back(e);
+        }
+    }
+
+    while (!elementList.empty())
+    {
+        result += pathSep;
+        result += elementList.front();
+        elementList.pop_front();
+    }
+
+    return result;
 }
 
 }   // namespace cp

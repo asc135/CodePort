@@ -32,6 +32,7 @@
 //  2023-04-03  asc Added UpperCase() and LowerCase() functions.
 //  2023-04-04  asc Added several more functions and reorganized into common and platform.
 //  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
+//  2023-05-02  asc Added NormalizePath().
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -326,6 +327,9 @@ String ReplaceSubString(String const &Input, String const &OrigSub, String const
 
 // get components of a path
 void GetPathComponents(String const &Path, String &Directory, String &Filename, String &Extension);
+
+// dereference relative components in a path
+String NormalizePath(String const &Path);
 
 // ----------------------------------------------------------------------------
 // platform dependent functions
