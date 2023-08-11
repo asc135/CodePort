@@ -33,6 +33,7 @@
 //  2023-04-04  asc Added several more functions and reorganized into common and platform.
 //  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
 //  2023-05-02  asc Added NormalizePath().
+//  2023-08-10  asc Removed string parameter from HostName() and DomainName() functions.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -390,10 +391,10 @@ bool MicroSleep(uint32_t Delay);
 bool NanoSleep(uint32_t Delay);
 
 // obtain the system's host name
-String &HostName(String &Name);
+String HostName();
 
 // obtain the system's domain namae
-String &DomainName(String &Name);
+String DomainName();
 
 // determine if a path is a file or a directory
 bool GetPathType(String const &Path, bool &IsFile, bool &IsDir);

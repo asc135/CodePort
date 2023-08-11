@@ -25,6 +25,7 @@
 //  2022-06-09  asc Added CpuTime64() function.
 //  2022-06-10  asc Added RunProgramGetOutput() function.
 //  2023-04-04  asc Added file size, attribute, type, and ipv6 functions.
+//  2023-08-10  asc Removed string parameter from HostName() and DomainName() functions.
 // ----------------------------------------------------------------------------
 
 #include <arpa/inet.h>
@@ -341,38 +342,32 @@ bool NanoSleep(uint32_t Delay)
 
 
 // obtain the system's host name
-String &HostName(String &Name)
+String HostName()
 {
     char buf[256];
+    cp::String rv;
 
     if (gethostname(buf, sizeof(buf)) == 0)
     {
-        Name = buf;
-    }
-    else
-    {
-        Name.clear();
+        rv = buf;
     }
 
-    return Name;
+    return rv;
 }
 
 
 // obtain the system's domain name
-String &DomainName(String &Name)
+String DomainName()
 {
     char buf[256];
+    cp::String rv;
 
     if (getdomainname(buf, sizeof(buf)) == 0)
     {
-        Name = buf;
-    }
-    else
-    {
-        Name.clear();
+        rv = buf;
     }
 
-    return Name;
+    return rv;
 }
 
 
