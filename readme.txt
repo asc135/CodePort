@@ -133,3 +133,7 @@ v00.48.01   2021-11-04
 v00.49      2022-11-18
     Added c++17 support, AIX and Solaris platforms, cpSubProcess, several new
     utility functions, and some refinements.
+
+v00.50      2023-09-06
+    Updated build system files, made some fixes and cleanups, added thread abort,
+    and added a number of utility functions.
