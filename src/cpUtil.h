@@ -34,6 +34,7 @@
 //  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
 //  2023-05-02  asc Added NormalizePath().
 //  2023-08-10  asc Removed string parameter from HostName() and DomainName() functions.
+//  2023-09-19  asc Added CheckAlphaNumericHU() function.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -304,6 +305,9 @@ size_t WriteFile(String const &Path, Buffer &FileData);
 
 // check if a string is alphanumeric
 bool CheckAlphaNumeric(String const &Input);
+
+// check if a string is alphanumeric with hyphens or underscores allowed
+bool CheckAlphaNumericHU(String const &Input);
 
 // convert a string to upper case
 String UpperCase(String const &Input);

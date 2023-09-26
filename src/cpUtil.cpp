@@ -31,6 +31,7 @@
 //  2023-04-04  asc Added CheckPrefix(), RemovePrefix(), ReplaceSubString(), GetPathComponents().
 //  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
 //  2023-05-02  asc Added NormalizePath().
+//  2023-09-19  asc Added CheckAlphaNumericHU() function.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -963,6 +964,20 @@ bool CheckAlphaNumeric(String const &Input)
     for (auto ch : Input)
     {
         rv = rv && (((ch >= '0' ) && (ch <= '9')) || ((ch >= 'A') && (ch <= 'Z')) || ((ch >= 'a') && (ch <= 'z')));
+    }
+
+    return rv;
+}
+
+
+// check if a string is alphanumeric with hyphens or underscores allowed
+bool CheckAlphaNumericHU(String const &Input)
+{
+    bool rv = !Input.empty();
+
+    for (auto ch : Input)
+    {
+        rv = rv && ( ((ch >= '0' ) && (ch <= '9')) || ((ch >= 'A') && (ch <= 'Z')) || ((ch >= 'a') && (ch <= 'z')) || (ch == '_') || (ch == '-'));
     }
 
     return rv;
