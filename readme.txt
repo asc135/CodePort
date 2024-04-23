@@ -137,3 +137,6 @@ v00.49      2022-11-18
 v00.50      2023-09-06
     Updated build system files, made some fixes and cleanups, added thread abort,
     and added a number of utility functions.
+
+v00.51      2023-09-26
+    Added hyphen and underscore alphanumeric string check utility function.
