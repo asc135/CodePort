@@ -18,6 +18,7 @@
 //  2022-06-02  asc Changed to ArrayWr() to avoid constructing a String.
 //  2022-06-12  asc Added detection of subprocess termination and handling.
 //  2022-06-14  asc Increased read buffer size and removed string terminator on each read.
+//  2024-05-10  asc Improved exit path logic and resource lifetime.
 // ----------------------------------------------------------------------------
 
 // (.)(.) 2022-02-03 asc Need to implement the k_FlowIn mode.
@@ -70,7 +71,7 @@ SubProcess::SubProcess(cp::String const &Command, SubProcIoDirection Dir) :
             m_PtrHandle = popen(Command.c_str(), mode.c_str());
         }
 
-        if (m_PtrHandle)
+        if ((m_PtrHandle) && (m_PtrHandle != (void *)(-1)))
         {
             // mark the underlying descriptor as non-blocking
             m_Descriptor = fileno(m_PtrHandle);
@@ -82,8 +83,8 @@ SubProcess::SubProcess(cp::String const &Command, SubProcIoDirection Dir) :
         }
         else
         {
-            // if failed, give the completed semaphore to signal it's not running
-            m_Completed.Give();
+            // failed to init so signal thread to exit
+            Cancel();
         }
     }
 }
@@ -92,12 +93,18 @@ SubProcess::SubProcess(cp::String const &Command, SubProcIoDirection Dir) :
 // destructor
 SubProcess::~SubProcess()
 {
+    // shut down the thread
+    Cancel();
+
+    // only need this operation if instance became valid
     if (m_Valid)
     {
-        Cancel();
-        WaitUntilDone();
         pclose(m_PtrHandle);
     }
+
+    // always let the thread exiting gate the destruction of component members
+    // so that it doesn't access member objects after they've been destroyed
+    WaitUntilDone();
 }
 
 

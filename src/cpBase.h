@@ -16,6 +16,7 @@
 //  2012-08-10  asc Moved identifiers to cp namespace.
 //  2013-05-16  asc Added spare flags to align member memory.
 //  2013-08-26  asc Redesigned flag support.
+//  2024-05-10  asc Disabled IsValid() check error message since it isn't an error.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_BASE_H
@@ -78,7 +79,8 @@ protected:
     {
         if (m_Valid == false)
         {
-            LogErr << MethodId << ", instance: " << this << " cannot be called.  Object initialization invalid." << std::endl;
+            // LogErr << MethodId << ", instance: " << this << " cannot be called.  Object initialization invalid." << std::endl;
+            (void)MethodId;
         }
 
         return m_Valid;

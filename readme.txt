@@ -140,3 +140,8 @@ v00.50      2023-09-06
 
 v00.51      2023-09-26
     Added hyphen and underscore alphanumeric string check utility function.
+
+v00.52      2024-05-10
+    Eliminated error message when calling cpBase::IsValid() since it isn't
+    an error to test an instance and find out it's invalid.  Streamlined exit
+    logic for cpSubProcess and improved resource lifetime handling.
