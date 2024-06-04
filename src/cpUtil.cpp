@@ -32,6 +32,7 @@
 //  2023-04-20  asc Added CheckSuffix() and RemoveSuffix().
 //  2023-05-02  asc Added NormalizePath().
 //  2023-09-19  asc Added CheckAlphaNumericHU() function.
+//  2024-06-03  asc Added DeleteFile() function.
 // ----------------------------------------------------------------------------
 
 #include <fstream>
@@ -953,6 +954,13 @@ size_t WriteFile(String const &Path, Buffer &FileData)
     }
 
     return numWritten;
+}
+
+
+// remove a file
+bool DeleteFile(String const &Path)
+{
+    return (remove(Path.c_str()) == 0);
 }
 
 

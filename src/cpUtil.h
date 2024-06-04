@@ -35,6 +35,7 @@
 //  2023-05-02  asc Added NormalizePath().
 //  2023-08-10  asc Removed string parameter from HostName() and DomainName() functions.
 //  2023-09-19  asc Added CheckAlphaNumericHU() function.
+//  2024-06-03  asc Added DeleteFile() function.
 // ----------------------------------------------------------------------------
 
 #ifndef CP_UTIL_H
@@ -302,6 +303,9 @@ size_t ReadFile(String const &Path, Buffer &FileData);
 
 // write the contents of a buffer into a file
 size_t WriteFile(String const &Path, Buffer &FileData);
+
+// remove a file
+bool DeleteFile(String const &Path);
 
 // check if a string is alphanumeric
 bool CheckAlphaNumeric(String const &Input);
