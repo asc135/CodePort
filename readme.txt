@@ -145,3 +145,6 @@ v00.52      2024-05-10
     Eliminated error message when calling cpBase::IsValid() since it isn't
     an error to test an instance and find out it's invalid.  Streamlined exit
     logic for cpSubProcess and improved resource lifetime handling.
+
+v00.53      2024-08-30
+    Added DeleteFile() utility function.
