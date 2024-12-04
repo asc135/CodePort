@@ -992,7 +992,13 @@ bool Datum::Find(Attrib_t Type, Attribs_t::iterator &It)
 // find a datum with the specified name
 Datum::Data_t::const_iterator Datum::Find(String const &Name) const
 {
-    return Find(Name);
+    /*
+     *  Avoid a compiler ambiguity issue on Debian 12 with gcc 12.2 by ensuring 
+     *  the non-const Find() is called, thus avoiding an infinite recursion loop.
+     */
+
+    Data_t::iterator i = const_cast<Datum *>(this)->Find(Name);
+    return static_cast<Data_t::const_iterator>(i);
 }
 
 
