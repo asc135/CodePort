@@ -23,6 +23,7 @@
 //  2013-06-28  asc Made name and inert attributes instead of a members.
 //  2013-07-17  asc Added Inert() static accessor method.
 //  2013-07-19  asc Reverted inert to a member boolean.
+//  2025-01-02  asc Fixed compilter update issue with Find() const.
 // ----------------------------------------------------------------------------
 
 #include "cpDatum.h"
@@ -981,18 +982,30 @@ Datum::Data_t::iterator Datum::Find(String const &Name)
 }
 
 
+// find a datum with the specified name
+Datum::Data_t::const_iterator Datum::Find(String const &Name) const
+{
+    Data_t::const_iterator i = m_Datums.begin();
+
+    while (i != m_Datums.end())
+    {
+        if (i->NameGet() == Name)
+        {
+            break;
+        }
+
+        ++i;
+    }
+
+    return i;
+}
+
+
 // find an attribute with the specified type
 bool Datum::Find(Attrib_t Type, Attribs_t::iterator &It)
 {
     It = m_Attribs.find(Type);
     return (It != m_Attribs.end());
-}
-
-
-// find a datum with the specified name
-Datum::Data_t::const_iterator Datum::Find(String const &Name) const
-{
-    return Find(Name);
 }
 
 

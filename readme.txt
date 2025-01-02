@@ -148,3 +148,6 @@ v00.52      2024-05-10
 
 v00.53      2024-08-30
     Added DeleteFile() utility function.
+
+v0.0.54     2025-01-02
+    Fixed a compiler update issue with cp::Datam::Find() const.
