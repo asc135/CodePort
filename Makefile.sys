@@ -19,6 +19,7 @@
 #   2022-10-07  asc Added $(strip ...) to compact the white space in parameters.
 #   2023-01-04  asc Changed CPP and CPPFLAGS to CXX and CXXFLAGS.  Added AR.
 #   2023-02-07  asc Restructured and extended dependency variables.
+#   2024-11-27  asc Added support for TARGET and OTHER flags and abstracted POSTBUILD.
 #
 ######################################################################
 
@@ -43,6 +44,11 @@ else
 endif
 
 #
+# Generate Source Path
+#
+SRC_PATH := $(PLATFORM_SRC) $(PROJECT_SRC) $(TARGET_SRC) $(LOCAL_SRC) $(OTHER_SRC)
+
+#
 # Create List of Virtual Paths (allows output directory different than source directory)
 #
 VPATH := $(OBJ_PATH) $(shell find -L $(SRC_PATH) -type d -print | tr '\n' ' ')
@@ -63,9 +69,9 @@ RM := rm
 #
 # Create List of Compiler and Linker Flags
 #
-CXXFLAGS := $(PLATFORM_CXXFLAGS) $(PROJECT_CXXFLAGS) $(LOCAL_CXXFLAGS)
-CFLAGS := $(PLATFORM_CFLAGS) $(PROJECT_CFLAGS) $(LOCAL_CFLAGS)
-LFLAGS := $(PLATFORM_LFLAGS) $(PROJECT_LFLAGS) $(LOCAL_LFLAGS)
+CXXFLAGS := $(PLATFORM_CXXFLAGS) $(PROJECT_CXXFLAGS) $(TARGET_CXXFLAGS) $(LOCAL_CXXFLAGS) $(OTHER_CXXFLAGS)
+CFLAGS := $(PLATFORM_CFLAGS) $(PROJECT_CFLAGS) $(TARGET_CFLAGS) $(LOCAL_CFLAGS) $(OTHER_CFLAGS)
+LFLAGS := $(PLATFORM_LFLAGS) $(PROJECT_LFLAGS) $(TARGET_LFLAGS) $(LOCAL_LFLAGS) $(OTHER_LFLAGS)
 
 #
 # Create List of Source Files
@@ -86,17 +92,17 @@ DEP_FILES := $(OBJS:.o=.d)
 #
 # Create List of Dependency Objects
 #
-DEPS := $(PLATFORM_DEPS) $(PROJECT_DEPS) $(LOCAL_DEPS)
+DEPS := $(PLATFORM_DEPS) $(PROJECT_DEPS) $(TARGET_DEPS) $(LOCAL_DEPS) $(OTHER_DEPS)
 
 #
 # Create List of Include Paths
 #
-INCS := $(shell find -L $(SRC_PATH) -type d -print | sed -e 's/^/-I/g' | tr '\n' ' ') $(PLATFORM_INCS) $(PROJECT_INCS) $(LOCAL_INCS)
+INCS := $(shell find -L $(SRC_PATH) -type d -print | sed -e 's/^/-I/g' | tr '\n' ' ') $(PLATFORM_INCS) $(PROJECT_INCS) $(TARGET_INCS) $(LOCAL_INCS) $(OTHER_INCS)
 
 #
 # Create List of Libraries
 #
-LIBS = $(PLATFORM_LIBS) $(PROJECT_LIBS) $(LOCAL_LIBS)
+LIBS = $(PLATFORM_LIBS) $(PROJECT_LIBS) $(TARGET_LIBS) $(LOCAL_LIBS) $(OTHER_LIBS)
 
 #
 # Phony targets
@@ -143,7 +149,9 @@ else
 	    $(strip $(CXX) $(LFLAGS)) -shared -o $@ $(OBJS) $(LIBS)
     endif
 endif
-	@if [ -f "postbuild.sh" ]; then ./postbuild.sh $@; fi
+ifdef POSTBUILD
+	@if [ -f $(POSTBUILD) ]; then $(POSTBUILD) $@; fi
+endif
 
 #
 # Rules for updating dependencies

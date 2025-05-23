@@ -715,8 +715,8 @@ bool SerDesIdl::DecodeChecksum()
     bool exitFlag = false;
     String line;
     Buffer buf;
-    uint32_t crcs;
-    uint32_t crcr;
+    uint32_t crcs = 0;
+    uint32_t crcr = 0;
     size_t pos = m_PtrStream->Pos();
 
     // decode elements

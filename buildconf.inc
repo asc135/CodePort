@@ -19,6 +19,7 @@
 #   2022-10-06  asc Switched from = to := where possible (expand at assignment).
 #   2023-01-04  asc Changed CPPFLAGS to CXXFLAGS.
 #   2023-02-07  asc Added local.inc for build configuration.
+#   2024-11-27  asc Added support for TARGET flags, OTHER flags, and recipes.
 #
 ###############################################################################
 
@@ -55,16 +56,23 @@ PLATFORM_COMMON := posix
 endif
 
 #
+# Source Path
+#
+PLATFORM_SRC := platforms/$(PLATFORM) platforms/$(PLATFORM_COMMON)
+PROJECT_SRC := src
+
+#
+# Output Path
+#
+ifndef OBJ_PATH
+OBJ_PATH := obj-$(shell $(BUILD_TOOL)gcc -dumpmachine)
+endif
+
+#
 # Platform Build Settings
 #
 include $(CODEPORT)/platforms/$(PLATFORM)/platform.inc
 
-#
-# Local Build Settings
-#
-ifneq ("$(wildcard ./local.inc)","")
-include local.inc
-endif
 
 #
 # Project Compiler and Linker Flags
@@ -74,15 +82,27 @@ PROJECT_CFLAGS := -Wall -Wextra -pedantic -Werror
 PROJECT_LFLAGS :=
 
 #
-# Source Path
+# Target Build Settings
 #
-SRC_PATH := src platforms/$(PLATFORM) platforms/$(PLATFORM_COMMON)
+ifneq ("$(wildcard ./target.inc)","")
+include target.inc
+endif
 
 #
-# Output Path
+# Local Build Settings
 #
-ifndef OBJ_PATH
-OBJ_PATH := obj-$(shell $(BUILD_TOOL)gcc -dumpmachine)
+ifneq ("$(wildcard ./local.inc)","")
+include local.inc
+endif
+
+#
+# Recipe Build Settings
+#
+RECIPE ?= release
+ifneq ("$(wildcard resources/recipes/$(RECIPE).inc)","")
+include resources/recipes/$(RECIPE).inc
+else
+$(error Recipe resources/recipes/$(RECIPE).inc does not exist)
 endif
 
 #
